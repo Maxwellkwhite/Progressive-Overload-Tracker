@@ -70,8 +70,6 @@ class CreateSet(FlaskForm):
     exercise6 = StringField("Exercise 6")
     exercise7 = StringField("Exercise 7")
     exercise8 = StringField("Exercise 8")
-    exercise9 = StringField("Exercise 9")
-    exercise10 = StringField("Exercise 10")
     submit = SubmitField("Create Set")
 
 #user DB
@@ -83,6 +81,7 @@ class User(UserMixin, db.Model):
     name: Mapped[str] = mapped_column(String(100))
     premium_level: Mapped[int] = mapped_column(Integer)
     # date_of_signup: Mapped[Date] = mapped_column(Date)
+    points: Mapped[int] = mapped_column(Integer)
 
 class SetList(db.Model):
     __tablename__ = "set_lists"
@@ -91,8 +90,8 @@ class SetList(db.Model):
     user_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     set_name: Mapped[str] = mapped_column(String(250), unique=False, nullable=False)
     exercise: Mapped[int] = mapped_column(Integer, nullable=True)
-    # weight: Mapped[str] = mapped_column(String(250))
-    # reps: Mapped[str] = mapped_column(String(250))
+    weight: Mapped[str] = mapped_column(String(250))
+    reps: Mapped[str] = mapped_column(String(250))
 
 with app.app_context():
     db.create_all()
@@ -112,12 +111,79 @@ def workouts():
 def create_set():
     form=CreateSet()
     if form.validate_on_submit():
-        new_exercise = SetList(
-            user_id=current_user.id,
-            set_name=form.name_of_set.data,
-            exercise=form.exercise1.data,)
-        db.session.add(new_exercise)
-        db.session.commit()
+        if form.exercise1.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise1.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise2.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise2.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise3.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise3.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise4.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise4.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise5.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise5.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise6.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise6.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise7.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise7.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        if form.exercise8.data:
+            new_exercise = SetList(
+                user_id=current_user.id,
+                set_name=form.name_of_set.data,
+                exercise=form.exercise8.data,
+                weight=0,
+                reps=0)
+            db.session.add(new_exercise)
+            db.session.commit()
+        g_user = current_user.get_id()
         return redirect(url_for("workouts"))
     return render_template("create_sets.html", form=form)
 
@@ -143,7 +209,8 @@ def register():
             email=form.email.data,
             name=form.name.data,
             password=hash_and_salted_password,
-            premium_level=0
+            premium_level=0,
+            points = 0
         )
         db.session.add(new_user)
         db.session.commit()

@@ -8,9 +8,9 @@
 </head>
 <body>
     {% for exercise in exercises %}
-    Set Name: {{exercise.set_name}}<br>
-    Exercise: {{exercise.exercise}}<br>
+    Exercise: {{exercise.exercise}} Weight: {{exercise.weight}} Reps: {{exercise.reps}}<br>
     {%endfor%}
+    {{list_of_sets}}
 </body>
 </html>
 {% include "footer.html" %}
