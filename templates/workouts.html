@@ -8,7 +8,14 @@
 </head>
 <body>
     {% for exercise in exercises %}
-    Exercise: {{exercise.exercise}} Weight: {{exercise.weight}} Reps: {{exercise.reps}}<br>
+    Exercise: {{exercise.exercise}} 
+    <form action="{{url_for('weight_update', id=exercise.id)}}" method="post">
+        <input type="text submit" id="weight" name="weight" value="{{exercise.weight}}">
+    </form>
+    <form action="{{url_for('weight_update', id=exercise.id)}}" method="post">
+        <input type="text submit" id="reps" name="reps" value="{{exercise.reps}}">
+    </form>
+    Weight: {{exercise.weight}} Reps: {{exercise.reps}}<br>
     {%endfor%}
     {{list_of_sets}}
 </body>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_wtf import FlaskForm
@@ -186,6 +186,26 @@ def create_set():
         g_user = current_user.get_id()
         return redirect(url_for("workouts"))
     return render_template("create_sets.html", form=form)
+
+@app.route("/weight_update/<int:id>", methods =["GET", "POST"])
+def weight_update(id):
+    if request.method == "POST":
+        with app.app_context():
+            completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
+            completed_update.weight = request.form.get("weight")
+            # completed_update.reps = request.form.get("reps")
+            db.session.commit()
+        return redirect(url_for('workouts'))
+    
+@app.route("/reps_update/<int:id>", methods =["GET", "POST"])
+def reps_update(id):
+    if request.method == "POST":
+        with app.app_context():
+            completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
+            completed_update.reps = request.form.get("reps")
+            # completed_update.reps = request.form.get("reps")
+            db.session.commit()
+        return redirect(url_for('workouts'))
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
