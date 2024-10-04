@@ -1,0 +1,18 @@
+{% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+Hello
+{{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+</body>
+</html>
+
+
+{% include "footer.html" %}

@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, PasswordField
 from wtforms.validators import DataRequired, Email
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, Date
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,7 +20,8 @@ APP_NAME = 'ENTER HERE'
 app = Flask(__name__)
 ckeditor = CKEditor(app)
 Bootstrap5(app)
-app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+# app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+app.config['SECRET_KEY'] = 'ABSCDE'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -59,6 +60,20 @@ class Feedback(FlaskForm):
     feedback = StringField("Feedback", validators=[DataRequired()])
     submit = SubmitField("Provide Feedback")
 
+class CreateSet(FlaskForm):
+    name_of_set = StringField("Name of Set", validators=[DataRequired()])
+    exercise1 = StringField("Exercise 1", validators=[DataRequired()])
+    exercise2 = StringField("Exercise 2")
+    exercise3 = StringField("Exercise 3")
+    exercise4 = StringField("Exercise 4")
+    exercise5 = StringField("Exercise 5")
+    exercise6 = StringField("Exercise 6")
+    exercise7 = StringField("Exercise 7")
+    exercise8 = StringField("Exercise 8")
+    exercise9 = StringField("Exercise 9")
+    exercise10 = StringField("Exercise 10")
+    submit = SubmitField("Create Set")
+
 #user DB
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -67,13 +82,44 @@ class User(UserMixin, db.Model):
     password: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(100))
     premium_level: Mapped[int] = mapped_column(Integer)
+    # date_of_signup: Mapped[Date] = mapped_column(Date)
+
+class SetList(db.Model):
+    __tablename__ = "set_lists"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    # Create Foreign Key, "users.id" the users refers to the tablename of User.
+    user_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    set_name: Mapped[str] = mapped_column(String(250), unique=False, nullable=False)
+    exercise: Mapped[int] = mapped_column(Integer, nullable=True)
+    # weight: Mapped[str] = mapped_column(String(250))
+    # reps: Mapped[str] = mapped_column(String(250))
 
 with app.app_context():
     db.create_all()
 
 @app.route('/', methods=["GET", "POST"])
-def INPUT_HERE():
+def landing_page():
     return render_template("index.html")
+
+
+@app.route('/workouts', methods=["GET", "POST"])
+def workouts():
+    result = db.session.execute(db.select(SetList))
+    exercises = result.scalars().all()
+    return render_template("workouts.html", exercises=exercises)
+
+@app.route('/create-set', methods=["GET", "POST"])
+def create_set():
+    form=CreateSet()
+    if form.validate_on_submit():
+        new_exercise = SetList(
+            user_id=current_user.id,
+            set_name=form.name_of_set.data,
+            exercise=form.exercise1.data,)
+        db.session.add(new_exercise)
+        db.session.commit()
+        return redirect(url_for("workouts"))
+    return render_template("create_sets.html", form=form)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -97,13 +143,13 @@ def register():
             email=form.email.data,
             name=form.name.data,
             password=hash_and_salted_password,
-            premium=0
+            premium_level=0
         )
         db.session.add(new_user)
         db.session.commit()
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
-        return redirect(url_for("INSERT HERE"))
+        return redirect(url_for("landing_page"))
     return render_template("register.html", form=form, current_user=current_user)
 
 @app.route('/login', methods=["GET", "POST"])
