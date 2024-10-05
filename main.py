@@ -72,6 +72,17 @@ class CreateSet(FlaskForm):
     exercise8 = StringField("Exercise 8")
     submit = SubmitField("Create Set")
 
+class AddExercise(FlaskForm):
+    name_of_set = SelectField("Name of Set", validators=[DataRequired()])
+    
+    def __init__(self, *args, **kwargs):
+        super(AddExercise, self).__init__(*args, **kwargs)
+        with app.app_context():
+            unique_sets = db.session.query(SetList.set_name).distinct().all()
+            self.name_of_set.choices = [(set[0], set[0]) for set in unique_sets]
+    new_exercise = StringField("Add Exercise", validators=[DataRequired()])
+    submit = SubmitField("Add")
+
 #user DB
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -103,9 +114,10 @@ def landing_page():
 
 @app.route('/workouts', methods=["GET", "POST"])
 def workouts():
+    form = AddExercise()
     result = db.session.execute(db.select(SetList))
     exercises = result.scalars().all()
-    return render_template("workouts.html", exercises=exercises)
+    return render_template("workouts.html", exercises=exercises, form=form)
 
 @app.route('/create-set', methods=["GET", "POST"])
 def create_set():
@@ -212,6 +224,20 @@ def delete_exercise(id):
     if request.method == "POST":
         exercise_to_delete = db.get_or_404(SetList, id)
         db.session.delete(exercise_to_delete)
+        db.session.commit()
+        return redirect(url_for('workouts'))
+    
+@app.route("/add_exercise", methods =['POST','GET'])
+def add_exercise():
+    form = AddExercise()
+    if form.validate_on_submit():
+        new_exercise = SetList(
+            user_id=current_user.id,
+            set_name=request.form.get('name_of_set'),
+            exercise=request.form.get('new_exercise'),
+            weight=0,
+            reps=0)
+        db.session.add(new_exercise)
         db.session.commit()
         return redirect(url_for('workouts'))
 
