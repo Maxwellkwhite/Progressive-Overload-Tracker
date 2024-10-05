@@ -5,19 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
 </head>
 <body>
     {% for exercise in exercises %}
     Exercise: {{exercise.exercise}} 
-    <form action="{{url_for('weight_update', id=exercise.id)}}" method="post">
-        <input type="text submit" id="weight" name="weight" value="{{exercise.weight}}">
-    </form>
-    <form action="{{url_for('weight_update', id=exercise.id)}}" method="post">
-        <input type="text submit" id="reps" name="reps" value="{{exercise.reps}}">
-    </form>
-    Weight: {{exercise.weight}} Reps: {{exercise.reps}}<br>
+    <div>
+        <input type="number" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')">
+        lbs
+        <input type="number" id="reps-{{exercise.id}}" name="reps" value="{{exercise.reps}}" onchange="updateExercise({{exercise.id}}, 'reps')">
+        reps
+
+    </div>
     {%endfor%}
     {{list_of_sets}}
+
+    <script>
+    function updateExercise(id, field) {
+        const value = document.getElementById(`${field}-${id}`).value;
+        let url;
+        if (field === 'weight') {
+            url = "{{url_for('weight_update', id=0)}}".replace('0', id);
+        } else if (field === 'reps') {
+            url = "{{url_for('reps_update', id=0)}}".replace('0', id);
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `${field}=${value}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById(`${field}-display-${id}`).textContent = value;
+            }
+        });
+    }
+    </script>
+
 </body>
 </html>
 {% include "footer.html" %}
