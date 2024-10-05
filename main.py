@@ -206,6 +206,14 @@ def reps_update(id):
             # completed_update.reps = request.form.get("reps")
             db.session.commit()
         return redirect(url_for('workouts'))
+    
+@app.route("/delete/<int:id>", methods =['POST','GET'])
+def delete_exercise(id):
+    if request.method == "POST":
+        exercise_to_delete = db.get_or_404(SetList, id)
+        db.session.delete(exercise_to_delete)
+        db.session.commit()
+        return redirect(url_for('workouts'))
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
