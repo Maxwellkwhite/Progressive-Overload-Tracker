@@ -63,6 +63,56 @@
                     filterExercises();
                 });
             </script>
+            <script>
+                function setCurrentFilter() {
+                    var currentFilter = document.getElementById('set-filter').value;
+                    document.getElementById('current_filter').value = currentFilter;
+                }
+            
+                document.getElementById('addExerciseForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    fetch("{{ url_for('add_exercise') }}", {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            var currentFilter = document.getElementById('current_filter').value;
+                            window.location.href = "{{ url_for('workouts') }}?set=" + encodeURIComponent(currentFilter);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Refresh the page after adding the exercise, regardless of success or failure
+                        location.reload();
+                    });
+                });
+                </script>
+                <script>
+                    function deleteExercise(id) {
+                        fetch("{{ url_for('delete_exercise', id=0) }}".replace('0', id), {
+                            method: 'POST',
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const exerciseElement = document.querySelector(`.exercise-item[data-set-name="${data.set_name}"]`);
+                                exerciseElement.remove();
+                                // Refresh the page to update the exercise list
+                                location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Refresh the page even if there's an error, to ensure synchronization
+                            location.reload();
+                        });
+                    }
+                    </script>
 </head>
 <body>
     {% set unique_sets = [] %}
@@ -75,7 +125,6 @@
     <div class="mb-3">
         <label for="set-filter" class="form-label">Filter by Set:</label>
         <select id="set-filter" class="form-select" onchange="filterExercises()">
-            <option value="">All Sets</option>
             {% for set_name in unique_sets %}
                 <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
             {% endfor %}
@@ -93,27 +142,7 @@
             <form action="{{ url_for('delete_exercise', id=exercise.id) }}" method="POST" onsubmit="event.preventDefault(); deleteExercise({{ exercise.id }});">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </form>
-            <script>
-            function deleteExercise(id) {
-                fetch("{{ url_for('delete_exercise', id=0) }}".replace('0', id), {
-                    method: 'POST',
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const exerciseElement = document.querySelector(`.exercise-item[data-set-name="${data.set_name}"]`);
-                        exerciseElement.remove();
-                        // Refresh the page to update the exercise list
-                        location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Refresh the page even if there's an error, to ensure synchronization
-                    location.reload();
-                });
-            }
-            </script>
+        
         </div>
     </div>
     {% endfor %}
@@ -132,16 +161,27 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url_for('add_exercise') }}" method="POST">
+                    <form action="{{ url_for('add_exercise') }}" method="POST" id="addExerciseForm">
                         {{ form.hidden_tag() }}
                         <div class="mb-3">
                             {{ form.name_of_set.label(class="form-label") }}
-                            {{ form.name_of_set(class="form-select") }}
+                            {{ form.name_of_set(class="form-select", onchange="document.getElementById('current_filter').value = this.value") }}
+                            <script>
+                                // Set the initial value to the current filter
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    var currentFilter = document.getElementById('set-filter').value;
+                                    var nameOfSetSelect = document.getElementById('name_of_set');
+                                    if (nameOfSetSelect) {
+                                        nameOfSetSelect.value = currentFilter;
+                                    }
+                                });
+                            </script>
                         </div>
                         <div class="mb-3">
                             {{ form.new_exercise.label(class="form-label") }}
                             {{ form.new_exercise(class="form-control") }}
                         </div>
+                        <input type="hidden" name="current_filter" id="current_filter">
                         {{ form.submit(class="btn btn-primary") }}
                     </form>
                 </div>

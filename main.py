@@ -241,6 +241,7 @@ def add_exercise():
         db.session.commit()
         return redirect(url_for('workouts'))
 
+
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
