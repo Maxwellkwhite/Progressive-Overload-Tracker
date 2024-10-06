@@ -14,6 +14,7 @@ import random
 import stripe
 import os
 import smtplib
+import jsonify
 
 APP_NAME = 'ENTER HERE'
 
@@ -117,7 +118,9 @@ def workouts():
     form = AddExercise()
     result = db.session.execute(db.select(SetList))
     exercises = result.scalars().all()
-    return render_template("workouts.html", exercises=exercises, form=form)
+    user_result = db.session.execute(db.select(User))
+    user = user_result.scalar()
+    return render_template("workouts.html", exercises=exercises, form=form, user=user)
 
 @app.route('/create-set', methods=["GET", "POST"])
 def create_set():
@@ -204,8 +207,11 @@ def weight_update(id):
     if request.method == "POST":
         with app.app_context():
             completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
-            completed_update.weight = request.form.get("weight")
-            # completed_update.reps = request.form.get("reps")
+            current_weight = completed_update.weight
+            #if current_weight > request.form.get("weight"):
+                #current_user.points += 1
+                #db.session.commit()
+            completed_update.weight = request.form.get("weight")           
             db.session.commit()
         return redirect(url_for('workouts'))
     

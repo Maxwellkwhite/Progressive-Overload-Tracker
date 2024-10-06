@@ -115,6 +115,8 @@
                     </script>
 </head>
 <body>
+    <h1>Hello {{user.name}}</h1>
+    <h2>Points: <span id="user-points">{{user.points}}</span></h2>
     {% set unique_sets = [] %}
     {% for exercise in exercises %}
         {% if exercise.set_name not in unique_sets %}
@@ -133,7 +135,7 @@
 
     {% for exercise in exercises %}
     <div class="exercise-item" data-set-name="{{exercise.set_name}}">
-        Exercise: {{exercise.exercise}} Set: {{exercise.set_name}} 
+        Exercise: {{exercise.exercise}}
         <div>
             <input type="number" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')">
             lbs
