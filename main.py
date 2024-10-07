@@ -112,7 +112,6 @@ with app.app_context():
 def landing_page():
     return render_template("index.html")
 
-
 @app.route('/workouts', methods=["GET", "POST"])
 def workouts():
     form = AddExercise()
@@ -249,6 +248,19 @@ def add_exercise():
         db.session.add(new_exercise)
         db.session.commit()
         return redirect(url_for('workouts'))
+
+@app.route('/leaderboard')
+def leaderboard():
+    # Query all users, ordered by points in descending order
+    users = db.session.execute(db.select(User).order_by(User.points.desc())).scalars()
+    
+    # Convert the result to a list for easier handling in the template
+    leaderboard_data = [
+        {'name': user.name, 'points': user.points}
+        for user in users
+    ]
+    
+    return render_template('leaderboard.html', leaderboard=leaderboard_data)
 
 
 @app.route('/register', methods=["GET", "POST"])
