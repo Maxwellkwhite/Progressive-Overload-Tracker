@@ -207,11 +207,11 @@ def weight_update(id):
     if request.method == "POST":
         with app.app_context():
             completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
-            current_weight = completed_update.weight
-            #if current_weight > request.form.get("weight"):
-                #current_user.points += 1
-                #db.session.commit()
-            completed_update.weight = request.form.get("weight")           
+            old_weight = float(completed_update.weight)
+            new_weight = float(request.form.get("weight"))
+            if new_weight > old_weight:
+                current_user.points += 1
+            completed_update.weight = new_weight
             db.session.commit()
         return redirect(url_for('workouts'))
     
@@ -220,8 +220,11 @@ def reps_update(id):
     if request.method == "POST":
         with app.app_context():
             completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
-            completed_update.reps = request.form.get("reps")
-            # completed_update.reps = request.form.get("reps")
+            old_reps = int(completed_update.reps)
+            new_reps = int(request.form.get("reps"))
+            if new_reps > old_reps:
+                current_user.points += 1
+            completed_update.reps = new_reps
             db.session.commit()
         return redirect(url_for('workouts'))
     
