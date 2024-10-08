@@ -17,13 +17,18 @@
         {% endif %}
     {% endfor %}
 
-    <div class="mb-3">
-        <label for="set-filter" class="form-label">Filter by Set:</label>
-        <select id="set-filter" class="form-select" onchange="filterExercises()">
-            {% for set_name in unique_sets %}
-                <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
-            {% endfor %}
-        </select>
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div class="flex-grow-1 me-3">
+            <label for="set-filter" class="form-label">Filter by Set:</label>
+            <select id="set-filter" class="form-select" onchange="filterExercises()">
+                {% for set_name in unique_sets %}
+                    <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" onclick="create_set()">Create Set</button>
+        </div>
     </div>
 
     {% for exercise in exercises %}
@@ -63,7 +68,11 @@
                         {{ form.hidden_tag() }}
                         <div class="mb-3">
                             {{ form.name_of_set.label(class="form-label") }}
-                            {{ form.name_of_set(class="form-select", onchange="document.getElementById('current_filter').value = this.value") }}
+                            <select name="name_of_set" id="name_of_set" class="form-select" onchange="document.getElementById('current_filter').value = this.value">
+                                {% for set_name in unique_sets %}
+                                    <option value="{{ set_name }}">{{ set_name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="mb-3">
                             {{ form.new_exercise.label(class="form-label") }}
@@ -140,6 +149,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        function create_set() {
+            window.location.href = "{{ url_for('create_set') }}";
         }
 
         document.addEventListener('DOMContentLoaded', function() {

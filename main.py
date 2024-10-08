@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired, Email
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Date
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import random
@@ -115,10 +115,10 @@ def landing_page():
 @app.route('/workouts', methods=["GET", "POST"])
 def workouts():
     form = AddExercise()
-    result = db.session.execute(db.select(SetList))
-    exercises = result.scalars().all()
-    user_result = db.session.execute(db.select(User))
+    result = db.session.execute(db.select(SetList).where(SetList.user_id == current_user.id))
+    user_result = db.session.execute(db.select(User).where(User.id == current_user.id))
     user = user_result.scalar()
+    exercises = result.scalars().all()
     return render_template("workouts.html", exercises=exercises, form=form, user=user)
 
 @app.route('/create-set', methods=["GET", "POST"])
@@ -249,10 +249,17 @@ def add_exercise():
         db.session.commit()
         return redirect(url_for('workouts'))
 
-@app.route('/leaderboard')
-def leaderboard():
-    # Query all users, ordered by points in descending order
-    users = db.session.execute(db.select(User).order_by(User.points.desc())).scalars()
+@app.route('/leaderboard/<int:page>', methods =['POST','GET'])
+def leaderboard(page):
+    # Set the number of items per page
+    per_page = 10
+    
+    # Query users, ordered by points in descending order, with pagination
+    users = db.session.execute(db.select(User).order_by(User.points.desc())
+                               .offset((page - 1) * per_page).limit(per_page)).scalars()
+    
+    # Get total number of users for pagination
+    total_users = db.session.execute(db.select(db.func.count(User.id))).scalar()
     
     # Convert the result to a list for easier handling in the template
     leaderboard_data = [
@@ -260,7 +267,28 @@ def leaderboard():
         for user in users
     ]
     
-    return render_template('leaderboard.html', leaderboard=leaderboard_data)
+    # Calculate total pages
+    total_pages = (total_users + per_page - 1) // per_page
+    
+    return render_template('leaderboard.html', leaderboard=leaderboard_data,
+                           page=page, total_pages=total_pages)
+
+@app.route('/user/<int:user_id>')
+@login_required
+def user_page(user_id):
+    user = db.get_or_404(User, user_id)
+    
+    # Get user's exercises
+    exercises = db.session.execute(db.select(SetList).where(SetList.user_id == user_id)).scalars().all()
+    
+    # Group exercises by set name
+    exercise_sets = {}
+    for exercise in exercises:
+        if exercise.set_name not in exercise_sets:
+            exercise_sets[exercise.set_name] = []
+        exercise_sets[exercise.set_name].append(exercise)
+    
+    return render_template('user_page.html', user=user, exercise_sets=exercise_sets)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -313,14 +341,14 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('INSERT HERE'))
+            return redirect(url_for('workouts'))
 
     return render_template("login.html", form=form, current_user=current_user)
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('INSERT HERE'))
+    return redirect(url_for('landing_page'))
 
 #for test of Stripe
 YOUR_DOMAIN = 'http://127.0.0.1:5002'
@@ -422,6 +450,8 @@ def feedback():
         connection.close()
         flash('Feedback received! Thank you for taking the time to help.')
     return render_template("feedback.html", form=form)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
