@@ -9,41 +9,43 @@
 </head>
 <body>
    <section id="main">
-    <h1>Track your workouts in style, with a twist</h1>
-    <p>The easiest way to track your progressive overloads. No more notes app, confusing apps, or notebooks.</p>
-    <form action="{{url_for('register') }}" method="post">
-        <button class="btn btn-secondary" role="button">Get Started Today</button>
-    </form>
-    <form action="{{url_for('create_set') }}" method="post">
-        <button class="btn btn-secondary" role="button">Create Set Testing</button>
-    </form>
-    <!-- Example of site placehodler -->
+        <h1>Track your workouts in style, with a twist</h1>
+        <p>We've simplified the workout tracking progress. Get the most out of your workouts and focus on the progressive overload. With us, there is no excuse to not hit your goals.</p>
+        <form action="{{url_for('register')}}">
+            <button class="btn btn-secondary" role="button">Get Started Today</button>
+        </form>
    </section>
    <br>
    <section id="pricing">
-    <div class="row">
-        <div class="col">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-            <h5 class="card-title">Payment Option 1</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+    <div class="row justify-content-center g-2">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Year Plan</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">$19.99/year</h6>
+                    <p class="card-text">Access to everything for the year.</p>
+                    <a href="{{url_for('register')}}" class="btn btn-primary">Choose Plan</a>
+                </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="border: 3px solid #ff6b6b; border-radius: 15px; position: relative; overflow: visible;">
+                <div style="position: absolute; top: -12px; right: -12px; background-color: #ff6b6b; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+                    Most Popular Plan
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Lifetime Plan</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">$29.99</h6>
+                    <p class="card-text">One fee for lifetime access. </p>
+                    <a href="{{url_for('register')}}" class="btn btn-primary">Choose Plan</a>
+                </div>
+            </div>
+        </div>
         </div>
     </div>
-    <div class="col">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Payment Option 2</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
-        </div>
+   </section>
+    </div>
+   </section>
     </div>
    </section>
 
