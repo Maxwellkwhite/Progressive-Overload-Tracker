@@ -17,6 +17,7 @@ import smtplib
 import jsonify
 
 APP_NAME = 'ENTER HERE'
+stripe.api_key = 'pk_test_51Q87D2HTbTE26Y4DuAB8Up8y2fFfhzM8ZGwLmSaMwLCkLzanKu5QrAxJxqK8MApNSyeGLTgMn2ExcQ0QDSKf66Z5005lRtW3rF'
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
@@ -290,6 +291,9 @@ def user_page(user_id):
     
     return render_template('user_page.html', user=user, exercise_sets=exercise_sets)
 
+@app.route('/payment_page', methods=["GET", "POST"])
+def payment_page():
+    return render_template('price_page.html')
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -320,7 +324,7 @@ def register():
         db.session.commit()
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
-        return redirect(url_for("landing_page"))
+        return redirect(url_for("payment_page"))
     return render_template("register.html", form=form, current_user=current_user)
 
 @app.route('/login', methods=["GET", "POST"])
@@ -376,8 +380,8 @@ def create_checkout_session():
                 'quantity': 1,}],
             mode='payment',
             allow_promotion_codes = True,
-            success_url=DOMAIN2 + '/success',
-            cancel_url=DOMAIN2 + '/cancel',)
+            success_url=YOUR_DOMAIN + '/success',
+            cancel_url=YOUR_DOMAIN + '/cancel',)
     except Exception as e:
         return str(e)
     return redirect(checkout_session.url, code=303)

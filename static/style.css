@@ -185,3 +185,22 @@ footer {
 #pricing .card-link:hover {
     color: #45b7aa;
 }
+#pricing .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#pricing .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#pricing .card-text {
+    flex-grow: 1;
+}
+
+#pricing .btn {
+    margin-top: auto;
+}
