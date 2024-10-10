@@ -73,9 +73,6 @@ class CreateSet(FlaskForm):
     exercise3 = StringField("Exercise 3")
     exercise4 = StringField("Exercise 4")
     exercise5 = StringField("Exercise 5")
-    exercise6 = StringField("Exercise 6")
-    exercise7 = StringField("Exercise 7")
-    exercise8 = StringField("Exercise 8")
     submit = SubmitField("Create Set")
 
 class AddExercise(FlaskForm):
@@ -184,33 +181,6 @@ def create_set():
                 reps=0)
             db.session.add(new_exercise)
             db.session.commit()
-        if form.exercise6.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise6.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        if form.exercise7.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise7.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        if form.exercise8.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise8.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
         g_user = current_user.get_id()
         return redirect(url_for("workouts"))
     return render_template("create_sets.html", form=form)
@@ -222,7 +192,7 @@ def weight_update(id):
             completed_update = db.session.execute(db.select(SetList).where(SetList.id == id)).scalar()
             old_weight = float(completed_update.weight)
             new_weight = float(request.form.get("weight"))
-            if new_weight > old_weight:
+            if new_weight > old_weight and old_weight != 0:
                 current_user.points += 1
             completed_update.weight = new_weight
             db.session.commit()

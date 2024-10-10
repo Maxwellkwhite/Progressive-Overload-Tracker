@@ -186,7 +186,7 @@ footer {
 }
 
 #pricing .card {
-    background-color: #fff;
+    background-color: #272727;
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -210,33 +210,35 @@ footer {
 #pricing .card-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #0a0a0d;
+    color: #ffffff;
 }
 
 #pricing .card-subtitle {
     font-size: 1rem;
-    color: #666;
+    color: #cccccc;
 }
 
 #pricing .card-text {
     font-size: 0.9rem;
-    color: #555;
+    color: #ffffff;
     flex-grow: 1;
 }
 
 #pricing .card-link {
-    color: #0a0a0d;
+    color: #ffffff;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 #pricing .card-link:hover {
-    color: #444;
+    color: #cccccc;
 }
 
 #pricing .btn {
     margin-top: auto;
+    background-color: #ffffff;
+    color: #0a0a0d;
 }
 
 .nav-link2 {
@@ -265,13 +267,13 @@ footer {
 
 /* Style for h2 in register.html */
 .card-body h2 {
-    color: #ffffff;
+    color: #000000;
 }
 .card-body h5 {
-    color: #ffffff;
+    color: #000000;
 }
 .card-body p {
-    color: #ffffff;
+    color: #000000;
 }
 /* for workouts page */
 .card.mb-3.exercise-item.exercise-card,
@@ -449,4 +451,23 @@ h1 {
         font-size: 1.6rem;
         margin: 15px auto 10px;
     }
+}
+/* Leaderboard pagination styles */
+.pagination .page-item .page-link {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #000000;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.pagination .page-item .page-link:hover,
+.pagination .page-item .page-link:focus {
+    background-color: #cccccc;
+    color: #000000;
+    border-color: #000000;
 }

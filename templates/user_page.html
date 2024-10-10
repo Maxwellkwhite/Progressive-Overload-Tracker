@@ -88,26 +88,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-            </div>
-        </div>
-
-        <h2>Exercise Sets</h2>
-        {% for set_name, exercises in exercise_sets.items() %}
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h3>{{ set_name }}</h3>
-                </div>
-                <ul class="list-group list-group-flush">
-                    {% for exercise in exercises %}
-                        <li class="list-group-item">
-                            {{ exercise.exercise }} - {{ exercise.weight }} lbs, {{ exercise.reps }} reps
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
-    </div>
 </body>
 </html>
 
