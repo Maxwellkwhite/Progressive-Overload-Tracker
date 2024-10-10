@@ -262,10 +262,13 @@ def add_exercise():
         db.session.commit()
         return redirect(url_for('workouts'))
 
-@app.route('/leaderboard/<int:page>', methods =['POST','GET'])
-def leaderboard(page):
+@app.route('/leaderboard', methods =['POST','GET'])
+def leaderboard():
     # Set the number of items per page
     per_page = 10
+    
+    # Get the current page number from the request, defaulting to 1
+    page = request.args.get('page', 1, type=int)
     
     # Query users, ordered by points in descending order, with pagination
     users = db.session.execute(db.select(User).order_by(User.points.desc())
@@ -283,16 +286,18 @@ def leaderboard(page):
     # Calculate total pages
     total_pages = (total_users + per_page - 1) // per_page
     
-    return render_template('leaderboard.html', leaderboard=leaderboard_data,
-                           page=page, total_pages=total_pages)
-
-@app.route('/user/<int:user_id>')
-@login_required
-def user_page(user_id):
-    user = db.get_or_404(User, user_id)
+    # Calculate next page number
+    next_page = page + 1 if page < total_pages else None
     
+    return render_template('leaderboard.html', leaderboard=leaderboard_data,
+                           page=page, total_pages=total_pages, next_page=next_page)
+
+@app.route('/user', methods =['POST','GET'])
+@login_required
+def user_page():
+    user = current_user
     # Get user's exercises
-    exercises = db.session.execute(db.select(SetList).where(SetList.user_id == user_id)).scalars().all()
+    exercises = db.session.execute(db.select(SetList).where(SetList.user_id == user.id)).scalars().all()
     
     # Group exercises by set name
     exercise_sets = {}
@@ -401,7 +406,7 @@ def create_checkout_session():
             mode='payment',
             allow_promotion_codes=True,
             success_url=YOUR_DOMAIN + f'/success?plan={plan}',
-            cancel_url=YOUR_DOMAIN + '/payment_page',
+            cancel_url=YOUR_DOMAIN + '/cancel',
         )
     except Exception as e:
         return str(e)
@@ -409,7 +414,7 @@ def create_checkout_session():
 
 @app.route('/cancel', methods=['POST', 'GET'])
 def cancel_session():
-    return redirect(url_for('INSERT HERE'))
+    return redirect(url_for('price_page'))
 
 @app.route('/success', methods=['POST', 'GET'])
 def success_session():
