@@ -61,10 +61,10 @@
         {%endif%}
         {% if current_user.is_authenticated: %}
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('user_page', user_id=current_user.id) }}">User Page</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('logout') }}">Logout</a>
+          <a class="nav-link d-flex justify-content-between align-items-center" href="{{url_for('user_page', user_id=current_user.id) }}">
+            <span>User Page</span>
+            <span class="badge bg-secondary ms-2" id="user-points">{{ current_user.points }}</span>
+          </a>
         </li>
         {%endif%}
       </ul>

@@ -1,7 +1,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #0a0a0d;
-    color: #0a0a0d;
+    color: #ffffff;
     line-height: 1.6;
     margin: 0;
     padding: 0;
@@ -22,9 +22,15 @@ body {
     transition: color 0.3s ease;
 }
 
-
 .navbar-brand:hover, .nav-link:hover {
     color: #fff !important;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: #ffffff !important;
+}
+.nav-link.active {
+    color: #ffffff !important;
 }
 
 .navbar-toggler {
@@ -246,4 +252,92 @@ footer {
 }
 .text-center {
     color: white;
+}
+
+/* Styles for register and login pages */
+.bg-dark {
+    background-color: #0a0a0d !important;
+}
+
+.card.bg-secondary {
+    background-color: #0a0a0d !important;
+}
+
+/* Style for h2 in register.html */
+.card-body h2 {
+    color: #ffffff;
+}
+.card-body h5 {
+    color: #ffffff;
+}
+.card-body p {
+    color: #ffffff;
+}
+/* for workouts page */
+.card.mb-3.exercise-item.exercise-card,
+.card.h-100.exercise-item.exercise-card {
+    background-color: #272727;
+    color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card.mb-3.exercise-item.exercise-card .card-body,
+.card.h-100.exercise-item.exercise-card .card-body {
+    color: #ffffff;
+}
+
+.card.mb-3.exercise-item.exercise-card .card-title,
+.card.h-100.exercise-item.exercise-card .card-title {
+    color: #ffffff;
+}
+
+.row.row-cols-1.row-cols-md-2.row-cols-lg-4.g-4 {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.card.h-100.exercise-item.exercise-card input[type="text"],
+.card.h-100.exercise-item.exercise-card input[type="number"],
+.card.h-100.exercise-item.exercise-card select {
+    background-color: #272727;
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    width: 40%;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.card.h-100.exercise-item.exercise-card input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.card.h-100.exercise-item.exercise-card input[type="number"]::-webkit-inner-spin-button,
+.card.h-100.exercise-item.exercise-card input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-danger {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    outline: none;
+    border-radius: 20px;
+}
+
+.input-group {
+    width: 50%;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.input-group-text {
+    border-radius: 10px 0 0 10px;
+}
+
+.form-control, .form-select {
+    border-radius: 0 10px 10px 0;
 }
