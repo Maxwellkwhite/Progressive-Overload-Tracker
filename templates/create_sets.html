@@ -5,13 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Set - Binge Buddy</title>
 </head>
-<body>
-Hello
-{{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+<body class="bg-dark text-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card bg-secondary mt-5">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Create New Set</h2>
+                        {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
-
 
 {% include "footer.html" %}

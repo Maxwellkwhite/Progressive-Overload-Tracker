@@ -121,6 +121,7 @@ def landing_page():
 @app.route('/workouts', methods=["GET", "POST"])
 def workouts():
     form = AddExercise()
+    form2=CreateSet()
     # Get the current date
     current_date = datetime.date.today()
     # Check if the user is logged in and their premium status
@@ -132,7 +133,7 @@ def workouts():
     user_result = db.session.execute(db.select(User).where(User.id == current_user.id))
     user = user_result.scalar()
     exercises = result.scalars().all()
-    return render_template("workouts.html", exercises=exercises, form=form, user=user)
+    return render_template("workouts.html", exercises=exercises, form=form, user=user, form2=form2)
 
 @app.route('/create-set', methods=["GET", "POST"])
 def create_set():

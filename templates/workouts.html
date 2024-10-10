@@ -25,45 +25,47 @@
                     {% endfor %}
                 </select>
                 <div>
-                    <button type="button" class="btn btn-primary" onclick="create_set()">New Set</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newSetModal">New Set</button>
                 </div>
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for set_name in unique_sets %}
+        <div class="set-container mb-4">
             {% for exercise in exercises %}
-            <div class="col">
-                <div class="card h-100 exercise-item exercise-card" data-set-name="{{exercise.set_name}}">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="card-title mb-0">{{exercise.exercise}}</h5>
-                            <form action="{{ url_for('delete_exercise', id=exercise.id) }}" method="POST" onsubmit="event.preventDefault(); deleteExercise({{ exercise.id }});" class="ms-2">
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <div class="mb-2">
-                                <div class="input-group">
-                                    <span class="input-group-text" style="width: 60px; justify-content: center;">Weight</span>
-                                    <input type="number" class="form-control" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')" style="-webkit-appearance: none; -moz-appearance: textfield; appearance: textfield;">
-                                </div>
+            {% if exercise.set_name == set_name %}
+            <div class="card mb-3 exercise-item exercise-card" data-set-name="{{exercise.set_name}}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title mb-0">{{exercise.exercise}}</h5>
+                        <form action="{{ url_for('delete_exercise', id=exercise.id) }}" method="POST" onsubmit="event.preventDefault(); deleteExercise({{ exercise.id }});" class="ms-2">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="mb-2">
+                            <div class="input-group">
+                                <span class="input-group-text" style="width: 60px; justify-content: center;">Weight</span>
+                                <input type="number" class="form-control" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')" style="-webkit-appearance: none; -moz-appearance: textfield; appearance: textfield;">
                             </div>
-                            <div class="mb-2">
-                                <div class="input-group">
-                                    <span class="input-group-text" style="width: 60px; justify-content: center;">Reps</span>
-                                    <select class="form-select" id="reps-{{exercise.id}}" name="reps" onchange="updateExercise({{exercise.id}}, 'reps')">
-                                        {% for i in range(1, 21) %}
-                                            <option value="{{ i }}" {% if exercise.reps|int == i %}selected{% endif %}>{{ i }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="input-group">
+                                <span class="input-group-text" style="width: 60px; justify-content: center;">Reps</span>
+                                <select class="form-select" id="reps-{{exercise.id}}" name="reps" onchange="updateExercise({{exercise.id}}, 'reps')">
+                                    {% for i in range(1, 21) %}
+                                        <option value="{{ i }}" {% if exercise.reps|int == i %}selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
+        {% endfor %}
         {{list_of_sets}}
     <br>
         <div class="d-flex justify-content-center">
@@ -72,7 +74,7 @@
             </button>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal for Add Exercise -->
         <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-labelledby="addExerciseModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -103,6 +105,60 @@
             </div>
         </div>
 
+        <!-- Modal for New Set -->
+        <div class="modal fade" id="newSetModal" tabindex="-1" aria-labelledby="newSetModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="newSetModalLabel">Create New Set</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-dark">
+                        <form action="{{ url_for('create_set') }}" method="POST" id="newSetForm">
+                            {{ form2.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form2.name_of_set.label(class="form-label text-dark") }}
+                                {{ form2.name_of_set(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise1.label(class="form-label text-dark") }}
+                                {{ form2.exercise1(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise2.label(class="form-label text-dark") }}
+                                {{ form2.exercise2(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise3.label(class="form-label text-dark") }}
+                                {{ form2.exercise3(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise4.label(class="form-label text-dark") }}
+                                {{ form2.exercise4(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise5.label(class="form-label text-dark") }}
+                                {{ form2.exercise5(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise6.label(class="form-label text-dark") }}
+                                {{ form2.exercise6(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise7.label(class="form-label text-dark") }}
+                                {{ form2.exercise7(class="form-control text-dark") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form2.exercise8.label(class="form-label text-dark") }}
+                                {{ form2.exercise8(class="form-control text-dark") }}
+                            </div>
+                            {{ form2.submit(class="btn btn-primary") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             function filterExercises() {
                 const selectedSet = document.getElementById('set-filter').value;
@@ -115,6 +171,9 @@
                         exercise.style.display = 'none';
                     }
                 });
+
+                // Save the selected set to localStorage
+                localStorage.setItem('selectedSet', selectedSet);
             }
 
             function setCurrentFilter() {
@@ -173,6 +232,11 @@
             }
 
             document.addEventListener('DOMContentLoaded', function() {
+                // Retrieve the selected set from localStorage
+                const savedSet = localStorage.getItem('selectedSet');
+                if (savedSet) {
+                    document.getElementById('set-filter').value = savedSet;
+                }
                 filterExercises();
 
                 var currentFilter = document.getElementById('set-filter').value;

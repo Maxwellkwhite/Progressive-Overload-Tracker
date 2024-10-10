@@ -280,6 +280,7 @@ footer {
     color: #ffffff;
     border-radius: 15px;
     overflow: hidden;
+    margin: 20px;
 }
 
 .card.mb-3.exercise-item.exercise-card .card-body,
@@ -320,6 +321,16 @@ footer {
     margin: 0;
 }
 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .btn-danger {
     background-color: #ffffff;
     color: #000000;
@@ -328,8 +339,8 @@ footer {
     border-radius: 20px;
 }
 
-.input-group {
-    width: 50%;
+.card.mb-3.exercise-item.exercise-card .input-group {
+    width: 100%;
     margin-left: 0;
     margin-right: auto;
 }
