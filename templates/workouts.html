@@ -17,16 +17,16 @@
         {% endfor %}
 
         <div class="mb-3 d-flex justify-content-between align-items-center">
-            <div class="flex-grow-1 me-3">
-                <label for="set-filter" class="form-label">Filter by Set:</label>
+            <div class="flex-grow-1 me-3 d-flex align-items-center">
+                <label for="set-filter" class="form-label me-2 mb-0">Set:</label>
                 <select id="set-filter" class="form-select" onchange="filterExercises()">
                     {% for set_name in unique_sets %}
                         <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
                     {% endfor %}
                 </select>
-            </div>
-            <div>
-                <button type="button" class="btn btn-primary" onclick="create_set()">Create Set</button>
+                <div>
+                    <button type="button" class="btn btn-primary" onclick="create_set()">New Set</button>
+                </div>
             </div>
         </div>
 
@@ -66,32 +66,34 @@
         </div>
         {{list_of_sets}}
     <br>
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExerciseModal" onclick="setCurrentFilter()">
-            Add Exercise
-        </button>
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExerciseModal" onclick="setCurrentFilter()">
+                Add Exercise
+            </button>
+        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-labelledby="addExerciseModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addExerciseModalLabel">Add Exercise</h5>
+                        <h5 class="modal-title text-dark" id="addExerciseModalLabel">Add Exercise</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body text-dark">
                         <form action="{{ url_for('add_exercise') }}" method="POST" id="addExerciseForm">
                             {{ form.hidden_tag() }}
                             <div class="mb-3">
-                                {{ form.name_of_set.label(class="form-label") }}
-                                <select name="name_of_set" id="name_of_set" class="form-select" onchange="document.getElementById('current_filter').value = this.value">
+                                {{ form.name_of_set.label(class="form-label text-dark") }}
+                                <select name="name_of_set" id="name_of_set" class="form-select text-dark" onchange="document.getElementById('current_filter').value = this.value">
                                     {% for set_name in unique_sets %}
                                         <option value="{{ set_name }}">{{ set_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="mb-3">
-                                {{ form.new_exercise.label(class="form-label") }}
-                                {{ form.new_exercise(class="form-control") }}
+                                {{ form.new_exercise.label(class="form-label text-dark") }}
+                                {{ form.new_exercise(class="form-control text-dark") }}
                             </div>
                             <input type="hidden" name="current_filter" id="current_filter">
                             {{ form.submit(class="btn btn-primary") }}
