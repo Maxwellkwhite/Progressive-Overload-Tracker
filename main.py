@@ -335,7 +335,7 @@ def register():
         db.session.commit()
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
-        return redirect(url_for("payment_page"))
+        return redirect(url_for("price_page"))
     return render_template("register.html", form=form, current_user=current_user)
 
 @app.route('/login', methods=["GET", "POST"])
@@ -370,8 +370,8 @@ YOUR_DOMAIN = 'http://127.0.0.1:5002'
 #for live of Stripe
 DOMAIN2 = 'https://bingebuddy.us'
 
-@app.route('/payment_page', methods=["GET", "POST"])
-def payment_page():
+@app.route('/price_page', methods=["GET", "POST"])
+def price_page():
     return render_template('price_page.html')
 
 @app.route('/create-checkout-session', methods=['POST', 'GET'])

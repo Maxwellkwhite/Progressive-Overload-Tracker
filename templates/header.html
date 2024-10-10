@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="static/style.css" />
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary {% if request.path == '/' %}fixed-top{% endif %}">
   <div class="container-fluid">
     <a class="navbar-brand">Binge Buddy</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,20 +32,28 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
+        {% if current_user.is_authenticated: %}
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{url_for('workouts')}}">Workouts</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{{url_for('create_set')}}">Create Set</a>
+        </li> -->
+        {%endif%}
+        {% if request.path == '/' %}
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#pricing">Pricing</a>
+        </li>
+        {% endif %}
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{{url_for('leaderboard', page=1)}}">Leaderboard</a>
         </li>
-        {% if not current_user.is_authenticated: %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('register') }}">Register</a>
-        </li>
-        {%endif%}
+        </ul>
+      </div>
+      <ul class="navbar-nav ms-auto">
         {% if not current_user.is_authenticated: %}
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('login') }}">Login</a>
@@ -53,17 +61,13 @@
         {%endif%}
         {% if current_user.is_authenticated: %}
         <li class="nav-item">
+          <a class="nav-link" href="{{url_for('user_page', user_id=current_user.id) }}">User Page</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="{{url_for('logout') }}">Logout</a>
         </li>
         {%endif%}
-        {% if current_user.is_authenticated: %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('change_password') }}">Change Password</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('user_page', user_id=current_user.id) }}">User Page</a>
-        </li>
-        {%endif%}
+      </ul>
       </ul>
     </div>
   </div>
