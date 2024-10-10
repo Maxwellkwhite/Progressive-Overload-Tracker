@@ -10,58 +10,81 @@
 <body>
     <div class="container">
         <h1>{{ user.name }}'s Profile</h1>
+        <h2>
+            {% if user.end_date_premium.year != 9999 %}
+                Premium End Date: {{ user.end_date_premium.strftime('%m/%d/%Y') }}
+            {% else %}
+                Lifetime Membership
+            {% endif %}
+        </h2>
         <p>Points: {{ user.points }}</p>
 
-        <div class="trophies mb-3 border rounded p-3 col-md-6">
-            <h2>Trophies</h2>
-            <div class="trophy-grid d-flex flex-wrap justify-content-start">
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 50 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Bronze Trophy: Earned for reaching 50 points"><div class="emoji-box" style="font-size: 2em;">🥉</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="trophies mb-3 border rounded p-3">
+                    <h2>Trophies</h2>
+                    <div class="trophy-grid d-flex flex-wrap justify-content-start">
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 50 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Bronze Trophy: Earned for reaching 50 points"><div class="emoji-box" style="font-size: 2em;">🥉</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 100 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Silver Trophy: Earned for reaching 100 points"><div class="emoji-box" style="font-size: 2em;">🥈</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 150 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Gold Medal: Earned for reaching 150 points"><div class="emoji-box" style="font-size: 2em;">🏅</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 200 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Military Medal: Earned for reaching 200 points"><div class="emoji-box" style="font-size: 2em;">🎖️</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 250 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Champion Trophy: Earned for reaching 250 points"><div class="emoji-box" style="font-size: 2em;">🏆</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            {% if user.points >= 300 %}
+                            <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Star Trophy: Earned for reaching 300 points"><div class="emoji-box" style="font-size: 2em;">⭐</div></span>
+                            {% else %}
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
+                            {% endif %}
+                        </div>
+                        {% for i in range(6) %}
+                        <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
+                            <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">⏳</div></span>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 100 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Silver Trophy: Earned for reaching 100 points"><div class="emoji-box" style="font-size: 2em;">🥈</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
+            </div>
+            <div class="col-md-4">
+                <div class="links mb-3 border rounded p-3">
+                    <h2>Quick Links</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a href="{{ url_for('change_password') }}">Change Password</a></li>
+                    </ul>
                 </div>
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 150 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Gold Medal: Earned for reaching 150 points"><div class="emoji-box" style="font-size: 2em;">🏅</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
-                </div>
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 200 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Military Medal: Earned for reaching 200 points"><div class="emoji-box" style="font-size: 2em;">🎖️</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
-                </div>
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 250 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Champion Trophy: Earned for reaching 250 points"><div class="emoji-box" style="font-size: 2em;">🏆</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
-                </div>
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    {% if user.points >= 300 %}
-                    <span class="trophy-box d-flex justify-content-center align-items-center h-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Star Trophy: Earned for reaching 300 points"><div class="emoji-box" style="font-size: 2em;">⭐</div></span>
-                    {% else %}
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">🔒</div></span>
-                    {% endif %}
-                </div>
-                {% for i in range(3) %}
-                <div class="trophy-item border rounded p-2 m-1" style="width: 60px; height: 60px;">
-                    <span class="trophy-box trophy-locked d-flex justify-content-center align-items-center h-100"><div class="emoji-box" style="font-size: 2em;">⏳</div></span>
-                </div>
-                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
             </div>
         </div>
 

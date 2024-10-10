@@ -7,187 +7,193 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello {{user.name}}</h1>
-    <h2>Points: <span id="user-points">{{user.points}}</span></h2>
+    {% if current_user.is_authenticated and current_user.premium_level == 1 %}
+        <h1>Hello {{user.name}}</h1>
+        <h2>Points: <span id="user-points">{{user.points}}</span></h2>
 
-    {% set unique_sets = [] %}
-    {% for exercise in exercises %}
-        {% if exercise.set_name not in unique_sets %}
-            {% set _ = unique_sets.append(exercise.set_name) %}
-        {% endif %}
-    {% endfor %}
+        {% set unique_sets = [] %}
+        {% for exercise in exercises %}
+            {% if exercise.set_name not in unique_sets %}
+                {% set _ = unique_sets.append(exercise.set_name) %}
+            {% endif %}
+        {% endfor %}
 
-    <div class="mb-3 d-flex justify-content-between align-items-center">
-        <div class="flex-grow-1 me-3">
-            <label for="set-filter" class="form-label">Filter by Set:</label>
-            <select id="set-filter" class="form-select" onchange="filterExercises()">
-                {% for set_name in unique_sets %}
-                    <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
-                {% endfor %}
-            </select>
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1 me-3">
+                <label for="set-filter" class="form-label">Filter by Set:</label>
+                <select id="set-filter" class="form-select" onchange="filterExercises()">
+                    {% for set_name in unique_sets %}
+                        <option value="{{ set_name }}" {% if request.args.get('set') == set_name %}selected{% endif %}>{{ set_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" onclick="create_set()">Create Set</button>
+            </div>
         </div>
-        <div>
-            <button type="button" class="btn btn-primary" onclick="create_set()">Create Set</button>
-        </div>
-    </div>
 
-    {% for exercise in exercises %}
-    <div class="exercise-item" data-set-name="{{exercise.set_name}}">
-        Exercise: {{exercise.exercise}}
-        <div>
-            <input type="number" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')" style="-webkit-appearance: none; -moz-appearance: textfield;">
-            lbs
-            <select id="reps-{{exercise.id}}" name="reps" onchange="updateExercise({{exercise.id}}, 'reps')">
-                {% for i in range(1, 21) %}
-                    <option value="{{ i }}" {% if exercise.reps|int == i %}selected{% endif %}>{{ i }}</option>
-                {% endfor %}
-            </select>
-            reps
-            <form action="{{ url_for('delete_exercise', id=exercise.id) }}" method="POST" onsubmit="event.preventDefault(); deleteExercise({{ exercise.id }});">
-                <button type="submit" class="btn btn-primary">Delete</button>
-            </form>
+        {% for exercise in exercises %}
+        <div class="exercise-item" data-set-name="{{exercise.set_name}}">
+            Exercise: {{exercise.exercise}}
+            <div>
+                <input type="number" id="weight-{{exercise.id}}" name="weight" value="{{exercise.weight}}" onchange="updateExercise({{exercise.id}}, 'weight')" style="-webkit-appearance: none; -moz-appearance: textfield;">
+                lbs
+                <select id="reps-{{exercise.id}}" name="reps" onchange="updateExercise({{exercise.id}}, 'reps')">
+                    {% for i in range(1, 21) %}
+                        <option value="{{ i }}" {% if exercise.reps|int == i %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+                reps
+                <form action="{{ url_for('delete_exercise', id=exercise.id) }}" method="POST" onsubmit="event.preventDefault(); deleteExercise({{ exercise.id }});">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            </div>
         </div>
-    </div>
-    {% endfor %}
-    {{list_of_sets}}
-<br>
-    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExerciseModal" onclick="setCurrentFilter()">
-        Add Exercise
-    </button>
+        {% endfor %}
+        {{list_of_sets}}
+    <br>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExerciseModal" onclick="setCurrentFilter()">
+            Add Exercise
+        </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-labelledby="addExerciseModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addExerciseModalLabel">Add Exercise</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ url_for('add_exercise') }}" method="POST" id="addExerciseForm">
-                        {{ form.hidden_tag() }}
-                        <div class="mb-3">
-                            {{ form.name_of_set.label(class="form-label") }}
-                            <select name="name_of_set" id="name_of_set" class="form-select" onchange="document.getElementById('current_filter').value = this.value">
-                                {% for set_name in unique_sets %}
-                                    <option value="{{ set_name }}">{{ set_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            {{ form.new_exercise.label(class="form-label") }}
-                            {{ form.new_exercise(class="form-control") }}
-                        </div>
-                        <input type="hidden" name="current_filter" id="current_filter">
-                        {{ form.submit(class="btn btn-primary") }}
-                    </form>
+        <!-- Modal -->
+        <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-labelledby="addExerciseModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addExerciseModalLabel">Add Exercise</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('add_exercise') }}" method="POST" id="addExerciseForm">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.name_of_set.label(class="form-label") }}
+                                <select name="name_of_set" id="name_of_set" class="form-select" onchange="document.getElementById('current_filter').value = this.value">
+                                    {% for set_name in unique_sets %}
+                                        <option value="{{ set_name }}">{{ set_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.new_exercise.label(class="form-label") }}
+                                {{ form.new_exercise(class="form-control") }}
+                            </div>
+                            <input type="hidden" name="current_filter" id="current_filter">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        function filterExercises() {
-            const selectedSet = document.getElementById('set-filter').value;
-            const exercises = document.querySelectorAll('.exercise-item');
-            
-            exercises.forEach(exercise => {
-                if (selectedSet === '' || exercise.dataset.setName === selectedSet) {
-                    exercise.style.display = '';
-                } else {
-                    exercise.style.display = 'none';
-                }
-            });
-        }
-
-        function setCurrentFilter() {
-            var currentFilter = document.getElementById('set-filter').value;
-            document.getElementById('current_filter').value = currentFilter;
-        }
-
-        function deleteExercise(id) {
-            fetch("{{ url_for('delete_exercise', id=0) }}".replace('0', id), {
-                method: 'POST',
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const exerciseElement = document.querySelector(`.exercise-item[data-set-name="${data.set_name}"]`);
-                    exerciseElement.remove();
-                    // Refresh the page to update the exercise list
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Refresh the page even if there's an error, to ensure synchronization
-                location.reload();
-            });
-        }
-
-        function updateExercise(id, field) {
-            const value = document.getElementById(`${field}-${id}`).value;
-            let url = field === 'weight' ? "{{ url_for('weight_update', id=0) }}" : "{{ url_for('reps_update', id=0) }}";
-            fetch(url.replace('0', id), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `${field}=${value}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(`${field} updated successfully`);
-                    if (data.points_updated) {
-                        document.getElementById('user-points').textContent = data.new_points;
+        <script>
+            function filterExercises() {
+                const selectedSet = document.getElementById('set-filter').value;
+                const exercises = document.querySelectorAll('.exercise-item');
+                
+                exercises.forEach(exercise => {
+                    if (selectedSet === '' || exercise.dataset.setName === selectedSet) {
+                        exercise.style.display = '';
+                    } else {
+                        exercise.style.display = 'none';
                     }
-                } else {
-                    console.error(`Failed to update ${field}`);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        function create_set() {
-            window.location.href = "{{ url_for('create_set') }}";
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            filterExercises();
-
-            var currentFilter = document.getElementById('set-filter').value;
-            var nameOfSetSelect = document.getElementById('name_of_set');
-            if (nameOfSetSelect) {
-                nameOfSetSelect.value = currentFilter;
+                });
             }
 
-            document.getElementById('addExerciseForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                fetch("{{ url_for('add_exercise') }}", {
+            function setCurrentFilter() {
+                var currentFilter = document.getElementById('set-filter').value;
+                document.getElementById('current_filter').value = currentFilter;
+            }
+
+            function deleteExercise(id) {
+                fetch("{{ url_for('delete_exercise', id=0) }}".replace('0', id), {
                     method: 'POST',
-                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        var currentFilter = document.getElementById('current_filter').value;
-                        window.location.href = "{{ url_for('workouts') }}?set=" + encodeURIComponent(currentFilter);
+                        const exerciseElement = document.querySelector(`.exercise-item[data-set-name="${data.set_name}"]`);
+                        exerciseElement.remove();
+                        // Refresh the page to update the exercise list
+                        location.reload();
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                })
-                .finally(() => {
-                    // Refresh the page after adding the exercise, regardless of success or failure
+                    // Refresh the page even if there's an error, to ensure synchronization
                     location.reload();
                 });
+            }
+
+            function updateExercise(id, field) {
+                const value = document.getElementById(`${field}-${id}`).value;
+                let url = field === 'weight' ? "{{ url_for('weight_update', id=0) }}" : "{{ url_for('reps_update', id=0) }}";
+                fetch(url.replace('0', id), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `${field}=${value}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(`${field} updated successfully`);
+                        if (data.points_updated) {
+                            document.getElementById('user-points').textContent = data.new_points;
+                        }
+                    } else {
+                        console.error(`Failed to update ${field}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function create_set() {
+                window.location.href = "{{ url_for('create_set') }}";
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                filterExercises();
+
+                var currentFilter = document.getElementById('set-filter').value;
+                var nameOfSetSelect = document.getElementById('name_of_set');
+                if (nameOfSetSelect) {
+                    nameOfSetSelect.value = currentFilter;
+                }
+
+                document.getElementById('addExerciseForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    fetch("{{ url_for('add_exercise') }}", {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            var currentFilter = document.getElementById('current_filter').value;
+                            window.location.href = "{{ url_for('workouts') }}?set=" + encodeURIComponent(currentFilter);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Refresh the page after adding the exercise, regardless of success or failure
+                        location.reload();
+                    });
+                });
             });
-        });
-    </script>
+        </script>
+    {% else %}
+        <h1>Access Denied</h1>
+        <p>You need to have an active premium subscription to access this page.</p>
+        <a href="{{ url_for('payment_page') }}" class="btn btn-primary">Upgrade to Premium</a>
+    {% endif %}
 </body>
 </html>
 {% include "footer.html" %}

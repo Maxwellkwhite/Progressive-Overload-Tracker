@@ -15,9 +15,13 @@ import stripe
 import os
 import smtplib
 import jsonify
+import datetime
+
+
+
 
 APP_NAME = 'ENTER HERE'
-stripe.api_key = 'pk_test_51Q87D2HTbTE26Y4DuAB8Up8y2fFfhzM8ZGwLmSaMwLCkLzanKu5QrAxJxqK8MApNSyeGLTgMn2ExcQ0QDSKf66Z5005lRtW3rF'
+stripe.api_key = 'sk_test_51Q87D2HTbTE26Y4DnNhAhLc9FFIFBJ7HSnpx0HSKMU7EFYVC5ol3cO7epzH1yK830s3i1qRBSZmPHXHgXebNZTIh00eDWJ2anN'
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
@@ -93,7 +97,8 @@ class User(UserMixin, db.Model):
     password: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(100))
     premium_level: Mapped[int] = mapped_column(Integer)
-    # date_of_signup: Mapped[Date] = mapped_column(Date)
+    date_of_signup: Mapped[Date] = mapped_column(Date)
+    end_date_premium: Mapped[Date] = mapped_column(Date)
     points: Mapped[int] = mapped_column(Integer)
 
 class SetList(db.Model):
@@ -116,6 +121,13 @@ def landing_page():
 @app.route('/workouts', methods=["GET", "POST"])
 def workouts():
     form = AddExercise()
+    # Get the current date
+    current_date = datetime.date.today()
+    # Check if the user is logged in and their premium status
+    if current_user.is_authenticated:
+        if current_user.end_date_premium < current_date:
+            current_user.premium_level = 0
+            db.session.commit()
     result = db.session.execute(db.select(SetList).where(SetList.user_id == current_user.id))
     user_result = db.session.execute(db.select(User).where(User.id == current_user.id))
     user = user_result.scalar()
@@ -291,9 +303,6 @@ def user_page(user_id):
     
     return render_template('user_page.html', user=user, exercise_sets=exercise_sets)
 
-@app.route('/payment_page', methods=["GET", "POST"])
-def payment_page():
-    return render_template('price_page.html')
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -317,6 +326,8 @@ def register():
             email=form.email.data,
             name=form.name.data,
             password=hash_and_salted_password,
+            date_of_signup=datetime.date.today(),
+            end_date_premium=datetime.date.today(),
             premium_level=0,
             points = 0
         )
@@ -359,29 +370,39 @@ YOUR_DOMAIN = 'http://127.0.0.1:5002'
 #for live of Stripe
 DOMAIN2 = 'https://bingebuddy.us'
 
+@app.route('/payment_page', methods=["GET", "POST"])
+def payment_page():
+    return render_template('price_page.html')
+
 @app.route('/create-checkout-session', methods=['POST', 'GET'])
 def create_checkout_session():
+    plan = request.args.get('plan')
     try:
-        # stripe.Coupon.create(
-        # id="free-test",
-        # percent_off=100,
-        # )
-        # stripe.PromotionCode.create(
-        # coupon="free-test",
-        # code="FREETEST",
-        # )
+        if plan == 'year':
+            price = 1999  # $19.99
+            product_name = 'Yearly Access'
+        elif plan == 'life':
+            price = 2999  # $29.99
+            product_name = 'Lifetime Access'
+        else:
+            return "Invalid plan selected", 400
+
         checkout_session = stripe.checkout.Session.create(
             line_items=[{
                 'price_data': {
-                'currency': 'usd',
-                'product_data': {
-                'name': 'Movie Access',},
-                'unit_amount': 299,},
-                'quantity': 1,}],
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': product_name,
+                    },
+                    'unit_amount': price,
+                },
+                'quantity': 1,
+            }],
             mode='payment',
-            allow_promotion_codes = True,
-            success_url=YOUR_DOMAIN + '/success',
-            cancel_url=YOUR_DOMAIN + '/cancel',)
+            allow_promotion_codes=True,
+            success_url=YOUR_DOMAIN + f'/success?plan={plan}',
+            cancel_url=YOUR_DOMAIN + '/payment_page',
+        )
     except Exception as e:
         return str(e)
     return redirect(checkout_session.url, code=303)
@@ -396,8 +417,18 @@ def success_session():
         g_user = current_user.get_id()
         completed_update = db.session.execute(db.select(User).where(User.id == g_user)).scalar()
         completed_update.premium_level = 1
+        
+        # Get the plan from the success URL
+        plan = request.args.get('plan')
+        current_date = datetime.date.today()
+        
+        if plan == 'year':
+            completed_update.end_date_premium = current_date + datetime.timedelta(days=365)
+        elif plan == 'life':
+            completed_update.end_date_premium = datetime.date(9999, 12, 31)  # Set to a far future date for lifetime access
+        
         db.session.commit()
-    return redirect(url_for('INSERT HERE'))
+    return redirect(url_for('workouts'))
 
 @app.route('/privacy-policy', methods=['POST', 'GET'])
 def privacy_policy():
@@ -454,6 +485,8 @@ def feedback():
         connection.close()
         flash('Feedback received! Thank you for taking the time to help.')
     return render_template("feedback.html", form=form)
+
+
 
 
 
