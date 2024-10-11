@@ -63,6 +63,7 @@ class ChangePassword(FlaskForm):
     submit = SubmitField("Change Password")
 
 class Feedback(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
     feedback = StringField("Feedback", validators=[DataRequired()])
     submit = SubmitField("Provide Feedback")
 
@@ -97,6 +98,10 @@ class User(UserMixin, db.Model):
     date_of_signup: Mapped[Date] = mapped_column(Date)
     end_date_premium: Mapped[Date] = mapped_column(Date)
     points: Mapped[int] = mapped_column(Integer)
+    weekly_points: Mapped[int] = mapped_column(Integer)
+    monthly_points: Mapped[int] = mapped_column(Integer)
+    last_weekly_reset: Mapped[Date] = mapped_column(Date)
+    last_monthly_reset: Mapped[Date] = mapped_column(Date)
 
 class SetList(db.Model):
     __tablename__ = "set_lists"
@@ -125,7 +130,19 @@ def workouts():
     if current_user.is_authenticated:
         if current_user.end_date_premium < current_date:
             current_user.premium_level = 0
-            db.session.commit()
+        
+        # Reset weekly points if a week has passed
+        if (current_date - current_user.last_weekly_reset).days >= 7:
+            current_user.weekly_points = 0
+            current_user.last_weekly_reset = current_date
+        
+        # Reset monthly points if a month has passed
+        if current_date.month != current_user.last_monthly_reset.month or current_date.year != current_user.last_monthly_reset.year:
+            current_user.monthly_points = 0
+            current_user.last_monthly_reset = current_date
+        
+        db.session.commit()
+    
     result = db.session.execute(db.select(SetList).where(SetList.user_id == current_user.id))
     user_result = db.session.execute(db.select(User).where(User.id == current_user.id))
     user = user_result.scalar()
@@ -194,6 +211,8 @@ def weight_update(id):
             new_weight = float(request.form.get("weight"))
             if new_weight > old_weight and old_weight != 0:
                 current_user.points += 1
+                current_user.weekly_points += 1
+                current_user.monthly_points += 1
             completed_update.weight = new_weight
             db.session.commit()
         return redirect(url_for('workouts'))
@@ -207,6 +226,8 @@ def reps_update(id):
             new_reps = int(request.form.get("reps"))
             if new_reps > old_reps:
                 current_user.points += 1
+                current_user.weekly_points += 1
+                current_user.monthly_points += 1
             completed_update.reps = new_reps
             db.session.commit()
         return redirect(url_for('workouts'))
@@ -266,6 +287,8 @@ def leaderboard():
         leaderboard_data.append({
             'name': user.name,
             'points': user.points,
+            'weekly_points': user.weekly_points,
+            'monthly_points': user.monthly_points,
             'total_exercises': total_exercises,
             'best_lift': best_lift_info
         })
@@ -321,7 +344,11 @@ def register():
             date_of_signup=datetime.date.today(),
             end_date_premium=datetime.date.today(),
             premium_level=0,
-            points = 0
+            points = 0,
+            weekly_points = 0,
+            monthly_points = 0,
+            last_weekly_reset = datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday() + 1),
+            last_monthly_reset = datetime.date.today().replace(day=1),
         )
         db.session.add(new_user)
         db.session.commit()
@@ -477,9 +504,6 @@ def feedback():
         connection.close()
         flash('Feedback received! Thank you for taking the time to help.')
     return render_template("feedback.html", form=form)
-
-
-
 
 
 if __name__ == "__main__":

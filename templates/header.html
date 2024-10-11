@@ -28,18 +28,30 @@
   <div class="container-fluid">
     <a class="navbar-brand">Binge Buddy</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      {% if current_user.is_authenticated: %}
+      Profile <span class="badge bg-secondary ms-2" id="user-points">{{ current_user.points }}</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" fill="white"/>
+      </svg>
+      {% else %}
       <span class="navbar-toggler-icon"></span>
+      {% endif %}
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         {% if current_user.is_authenticated: %}
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{url_for('workouts')}}">Workouts</a>
+          <a class="nav-link" href="{{url_for('workouts')}}">Workouts</a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{{url_for('create_set')}}">Create Set</a>
-        </li> -->
-        {%endif%}
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('leaderboard', page=1)}}">Leaderboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('user_page', user_id=current_user.id) }}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+        </li>
+        {% else %}
         {% if request.path == '/' %}
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
@@ -47,27 +59,22 @@
         <li class="nav-item">
           <a class="nav-link" href="#pricing">Pricing</a>
         </li>
+        {% elif request.path == '/leaderboard' %}
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
         {% endif %}
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{{url_for('leaderboard', page=1)}}">Leaderboard</a>
         </li>
-        </ul>
-      </div>
+        {% endif %}
+      </ul>
       <ul class="navbar-nav ms-auto">
-        {% if not current_user.is_authenticated: %}
+        {% if not current_user.is_authenticated and request.path != '/login': %}
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('login') }}">Login</a>
         </li>
-        {%endif%}
-        {% if current_user.is_authenticated: %}
-        <li class="nav-item">
-          <a class="nav-link d-flex justify-content-between align-items-center" href="{{url_for('user_page', user_id=current_user.id) }}">
-            <span>User Page</span>
-            <span class="badge bg-secondary ms-2" id="user-points">{{ current_user.points }}</span>
-          </a>
-        </li>
-        {%endif%}
-      </ul>
+        {% endif %}
       </ul>
     </div>
   </div>

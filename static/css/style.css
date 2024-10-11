@@ -57,7 +57,7 @@ body {
 }
 
 #main h1 {
-    font-size: 7rem;
+    font-size: clamp(3rem, 10vw, 7rem);
     font-weight: 700;
     margin-bottom: 30px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -160,7 +160,7 @@ footer {
 
 @media (max-width: 768px) {
     #main h1 {
-        font-size: 5rem;
+        font-size: 3rem;
     }
     
     #main p {
@@ -177,6 +177,22 @@ footer {
 
     .navbar-nav .nav-item {
         margin: 5px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    #main h1 {
+        font-size: 3rem;
+    }
+    
+    #main {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    #main p {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
 
@@ -536,3 +552,4 @@ h1 {
     transform: rotate(30deg);
     pointer-events: none;
 }
+
