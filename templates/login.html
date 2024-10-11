@@ -19,16 +19,24 @@
     <div class="container py-5">
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <h1 class="display-4 mb-4">Welcome Back to Binge Buddy</h1>
-                <h3 class="mb-4">Your Ultimate Fitness Companion</h3>
-                <p class="lead mb-4">Log in to continue your fitness journey with:</p>
-                <ul class="list-unstyled">
-                    <li><i class="fas fa-check-circle text-success me-2"></i>Personalized workout tracking</li>
-                    <li><i class="fas fa-check-circle text-success me-2"></i>Progress monitoring</li>
-                    <li><i class="fas fa-check-circle text-success me-2"></i>Community support</li>
-                    <li><i class="fas fa-check-circle text-success me-2"></i>Expert fitness advice</li>
-                </ul>
-                <p class="mt-4">Let's pick up where you left off and keep pushing towards your goals!</p>
+                <div id="bingeBuddyCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <h2 class="display-5 mb-3">Master Progressive Overload</h2>
+                            <p class="lead">Simple design to help you reach your goals</p>
+                            <img src="static/css/images/Screenshot 2024-10-11 at 7.10.05 PM.png" class="d-block w-100" alt="Fitness Tracker">
+                        </div>
+                        <div class="carousel-item">
+                            <h2 class="display-5 mb-3">Community Engagement</h2>
+                            <p class="lead">See your friends and others climb the leaderboard</p>
+                            <img src="static/css/images/Screenshot 2024-10-11 at 7.04.52 PM.png" class="d-block w-100" alt="Community Support">
+                        </div>
+                    </div>
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#bingeBuddyCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#bingeBuddyCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-5">
                 <div class="card bg-light text-dark rounded shadow-lg">
