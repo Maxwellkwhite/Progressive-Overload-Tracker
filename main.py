@@ -45,25 +45,25 @@ db.init_app(app)
 
 # Create a form to register new users
 class RegisterForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired() ])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     name = StringField("Name", validators=[DataRequired()])
     submit = SubmitField("Sign Me Up!")
 
 # Create a form to login existing users
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Let Me In!")
 
 class ChangePassword(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     new_password = PasswordField("New Password", validators=[DataRequired()])
     submit = SubmitField("Change Password")
 
 class Feedback(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     feedback = StringField("Feedback", validators=[DataRequired()])
     submit = SubmitField("Provide Feedback")
 
