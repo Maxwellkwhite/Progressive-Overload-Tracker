@@ -8,7 +8,42 @@
 </head>
 <body>
     {% if current_user.is_authenticated and current_user.premium_level == 1 %}
-        <h1>Workouts for {{user.name}}</h1>
+        <h1 class="text-center">
+            <span class="d-inline-flex align-items-center justify-content-center">
+                Workouts for {{user.name}}
+                <span id="user-points" class="badge bg-success rounded-circle ms-2">{{user.points}}</span>
+                <script>
+                function updatePoints() {
+                    fetch('/get_user_points')
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('user-points').textContent = data.total_points;
+                        });
+                }
+
+                // Update points on any movement
+                document.addEventListener('mousemove', updatePoints);
+                document.addEventListener('touchmove', updatePoints);
+                document.addEventListener('scroll', updatePoints);
+
+                // Update points whenever an input is used or workout is updated
+                document.querySelectorAll('input, select').forEach(input => {
+                    input.addEventListener('change', updatePoints);
+                });
+
+                // Function to update points after workout update
+                function updatePointsAfterWorkout() {
+                    updatePoints(); // Immediately update points
+                }
+
+                // Add event listener to update points after workout update
+                document.addEventListener('workoutUpdated', updatePointsAfterWorkout);
+
+                // Initial update when the page loads
+                document.addEventListener('DOMContentLoaded', updatePoints);
+                </script>
+            </span>
+        </h1>
         {% set unique_sets = [] %}
         {% for exercise in exercises %}
             {% if exercise.set_name not in unique_sets %}
@@ -68,11 +103,13 @@
         {% endfor %}
         {{list_of_sets}}
     <br>
+        {% if unique_sets %}
         <div class="d-flex justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addExerciseModal" onclick="setCurrentFilter()">
                 Add Exercise
             </button>
         </div>
+        {% endif %}
 
         <!-- Modal for Add Exercise -->
         <div class="modal fade" id="addExerciseModal" tabindex="-1" aria-labelledby="addExerciseModalLabel" aria-hidden="true">

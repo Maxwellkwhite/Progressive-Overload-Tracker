@@ -506,5 +506,14 @@ def feedback():
     return render_template("feedback.html", form=form)
 
 
+@app.route('/get_user_points', methods=['GET'])
+@login_required
+def get_user_points():
+    user = current_user
+    return {
+        'total_points': user.points,
+    }
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
