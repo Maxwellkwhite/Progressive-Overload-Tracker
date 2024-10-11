@@ -10,17 +10,19 @@
     <div class="container">
         <br>
         <h1>{{ user.name }}'s Profile</h1>
-        <h2>
-            {% if user.end_date_premium.year != 9999 and user.premium_level == 1 %}
-                Premium End Date: {{ user.end_date_premium.strftime('%m/%d/%Y') }}
-            {% elif user.end_date_premium.year == 9999 and user.premium_level == 1 %}
-                Lifetime Membership
-            {%else%}
-                No Premium Access - 
-                <a href="{{ url_for('price_page') }}" class="btn btn-primary btn-sm">Get Access</a>
-            {% endif %}
-        </h2>
-        <p>Points: {{ user.points }}</p>
+        <div class="text-center">
+            <h4 class="font-italic">
+                {% if user.end_date_premium.year != 9999 and user.premium_level == 1 %}
+                    <i>Premium End Date: {{ user.end_date_premium.strftime('%m/%d/%Y') }}</i>
+                {% elif user.end_date_premium.year == 9999 and user.premium_level == 1 %}
+                    <i>Lifetime Membership</i>
+                {% else %}
+                    <i>No Premium Access - 
+                    <a href="{{ url_for('price_page') }}" class="btn btn-primary btn-sm">Get Access</a></i>
+                {% endif %}
+            </h4>
+            <p style="font-size: 1.2em;"><strong>Points: {{ user.points }}</strong></p>
+        </div>
 
         <div class="row">
             <div class="col-md-8">
