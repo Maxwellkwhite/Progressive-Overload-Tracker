@@ -471,3 +471,68 @@ h1 {
     color: #000000;
     border-color: #000000;
 }
+/* Leaderboard table styles */
+.table-dark.table-hover tbody tr {
+    margin-bottom: 10px;
+    background-color: #343a40;
+    background-image: linear-gradient(to bottom, #3a4149, #2c3136);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.table-dark.table-hover tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.table-dark.table-hover tbody tr:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.table-dark.table-hover {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.card-body {
+    padding-bottom: 10px;
+}
+
+.table-dark.table-hover tbody tr td,
+.table-dark.table-hover tbody tr th {
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.table-dark.table-hover tbody tr td::after,
+.table-dark.table-hover tbody tr th::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(30deg);
+    pointer-events: none;
+}
+
+.table-dark.table-hover thead tr th {
+    border-bottom: 2px solid #fff;
+    background-color: #343a40;
+    position: relative;
+    overflow: hidden;
+}
+
+.table-dark.table-hover thead tr th::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(30deg);
+    pointer-events: none;
+}

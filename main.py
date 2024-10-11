@@ -249,10 +249,26 @@ def leaderboard():
     total_users = db.session.execute(db.select(db.func.count(User.id))).scalar()
     
     # Convert the result to a list for easier handling in the template
-    leaderboard_data = [
-        {'name': user.name, 'points': user.points}
-        for user in users
-    ]
+    leaderboard_data = []
+    for user in users:
+        # Count the total exercises for each user
+        total_exercises = db.session.execute(db.select(db.func.count(SetList.id))
+                                             .where(SetList.user_id == user.id)).scalar()
+        
+        # Find the best lift (exercise with the most weight) for each user
+        best_lift = db.session.execute(db.select(SetList)
+                                       .where(SetList.user_id == user.id)
+                                       .order_by(SetList.weight.desc())
+                                       .limit(1)).scalar()
+        
+        best_lift_info = f"{best_lift.exercise} ({best_lift.weight})" if best_lift else "N/A"
+        
+        leaderboard_data.append({
+            'name': user.name,
+            'points': user.points,
+            'total_exercises': total_exercises,
+            'best_lift': best_lift_info
+        })
     
     # Calculate total pages
     total_pages = (total_users + per_page - 1) // per_page
