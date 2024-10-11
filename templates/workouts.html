@@ -12,12 +12,33 @@
             <span class="d-inline-flex align-items-center justify-content-center">
                 Workouts for {{user.name}}
                 <span id="user-points" class="badge bg-success rounded-circle ms-2">{{user.points}}</span>
+                <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
                 <script>
                 function updatePoints() {
                     fetch('/get_user_points')
                         .then(response => response.json())
                         .then(data => {
-                            document.getElementById('user-points').textContent = data.total_points;
+                            const oldPoints = parseInt(document.getElementById('user-points').textContent);
+                            const newPoints = data.total_points;
+                            if (newPoints > oldPoints) {
+                                // Animate the points increase
+                                let currentPoints = oldPoints;
+                                const pointsInterval = setInterval(() => {
+                                    currentPoints++;
+                                    document.getElementById('user-points').textContent = currentPoints;
+                                    if (currentPoints >= newPoints) {
+                                        clearInterval(pointsInterval);
+                                    }
+                                }, 50);
+
+                                confetti({
+                                    particleCount: 100,
+                                    spread: 70,
+                                    origin: { y: 0.6 }
+                                });
+                            } else {
+                                document.getElementById('user-points').textContent = newPoints;
+                            }
                         });
                 }
 
@@ -42,7 +63,6 @@
                 // Initial update when the page loads
                 document.addEventListener('DOMContentLoaded', updatePoints);
                 </script>
-            </span>
         </h1>
         {% set unique_sets = [] %}
         {% for exercise in exercises %}
