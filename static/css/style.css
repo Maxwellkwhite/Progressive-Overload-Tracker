@@ -579,3 +579,41 @@ h1 {
         padding: 1rem;
     }
 }
+
+@media (max-width: 767px) {
+    .btn-group.w-100 {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .btn-group.w-100 .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    .table th, .table td {
+        padding: 0.5rem;
+    }
+}
+.btn-group.w-100 {
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.btn-group.w-100 .btn-secondary {
+    border-radius: 0.25rem;
+}
+
+.btn-group.w-100 .btn-secondary:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.btn-group.w-100 .btn-secondary:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
