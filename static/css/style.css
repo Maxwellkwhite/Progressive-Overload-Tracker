@@ -50,7 +50,7 @@ body {
 }
 
 #main {
-    padding: 80px 0;
+    padding: 40px 0;
     text-align: center;
     background: linear-gradient(135deg, #0a0a0d, #0a0a0d);
     color: #fff;
@@ -59,14 +59,14 @@ body {
 #main h1 {
     font-size: clamp(3rem, 10vw, 7rem);
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
 }
 
 #main p {
     font-size: 1.2rem;
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin: 0 auto 20px;
 }
 
 .btn-primary {
@@ -86,13 +86,13 @@ body {
 }
 
 #features {
-    padding: 80px 0;
+    padding: 40px 0;
     background: linear-gradient(135deg, #0a0a0d, #0a0a0d);
 }
 
 .feature-card {
     text-align: center;
-    padding: 30px;
+    padding: 20px;
     border-radius: 8px;
     background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -124,14 +124,13 @@ body {
 #cta {
     background-color: #0a0a0d;
     color: #fff;
-    padding: 60px 0;
+    padding: 40px 0;
     text-align: center;
 }
 
 #cta h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+    font-size: 3rem;
+    font-weight: 800;  /* Increased font weight for h2 on index page */
 }
 
 .btn-secondary {
@@ -154,7 +153,7 @@ body {
 footer {
     background-color: #0a0a0d;
     color: #fff;
-    padding: 30px 0;
+    padding: 20px 0;
     text-align: center;
 }
 
@@ -168,7 +167,7 @@ footer {
     }
     
     .feature-card {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
 
     .navbar-nav {
@@ -177,6 +176,10 @@ footer {
 
     .navbar-nav .nav-item {
         margin: 5px 0;
+    }
+
+    #cta h2 {
+        font-size: 2.5rem;
     }
 }
 
@@ -194,11 +197,15 @@ footer {
         padding-left: 15px;
         padding-right: 15px;
     }
+
+    #cta h2 {
+        font-size: 2rem;
+    }
 }
 
 #pricing {
     background-color: #0a0a0d;
-    padding: 60px 0;
+    padding: 40px 0;
 }
 
 #pricing .card {
@@ -221,21 +228,22 @@ footer {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    padding: 1rem;
 }
 
 #pricing .card-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #ffffff;
 }
 
 #pricing .card-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #cccccc;
 }
 
 #pricing .card-text {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #ffffff;
     flex-grow: 1;
 }
@@ -255,6 +263,39 @@ footer {
     margin-top: auto;
     background-color: #ffffff;
     color: #0a0a0d;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+    #pricing .card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #pricing .card {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #pricing .card-title {
+        font-size: 1.1rem;
+    }
+    
+    #pricing .card-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    #pricing .card-text {
+        font-size: 0.75rem;
+    }
+    
+    #pricing .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
 }
 
 .nav-link2 {
@@ -617,3 +658,9 @@ h1 {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+@media (max-width: 767px) {
+    #leaderboard .row.justify-content-center.mb-4 {
+        margin-bottom: 0 !important;
+    }
+}
+
