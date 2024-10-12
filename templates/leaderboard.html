@@ -11,10 +11,11 @@
     <div class="container py-3">
         <h1 class="text-center mb-2" style="font-size: 2rem;">🏆 Leaderboard 🏆</h1>
         
-        <!-- Add filter for weekly, monthly, all time -->
+        <!-- Add filter for daily, weekly, monthly, all time -->
         <div class="row justify-content-center mb-3">
             <div class="col-md-8">
                 <div class="btn-group w-100" role="group" aria-label="Leaderboard filter">
+                    <a href="{{ url_for('leaderboard', page=request.args.get('page', 1), filter='daily') }}" class="btn btn-secondary {% if request.args.get('filter') == 'daily' %}active{% endif %}">Daily</a>
                     <a href="{{ url_for('leaderboard', page=request.args.get('page', 1), filter='weekly') }}" class="btn btn-secondary {% if request.args.get('filter') == 'weekly' %}active{% endif %}">Weekly</a>
                     <a href="{{ url_for('leaderboard', page=request.args.get('page', 1), filter='monthly') }}" class="btn btn-secondary {% if request.args.get('filter') == 'monthly' %}active{% endif %}">Monthly</a>
                     <a href="{{ url_for('leaderboard', page=request.args.get('page', 1), filter='all_time') }}" class="btn btn-secondary {% if request.args.get('filter') == 'all_time' or not request.args.get('filter') %}active{% endif %}">All Time</a>
@@ -32,7 +33,9 @@
                                     <th scope="col" class="text-center py-2">#</th>
                                     <th scope="col" class="py-2">Name</th>
                                     <th scope="col" class="text-center py-2">
-                                        {% if request.args.get('filter') == 'weekly' %}
+                                        {% if request.args.get('filter') == 'daily' %}
+                                            Daily Points
+                                        {% elif request.args.get('filter') == 'weekly' %}
                                             Weekly Points
                                         {% elif request.args.get('filter') == 'monthly' %}
                                             Monthly Points
@@ -54,7 +57,9 @@
                                         <th scope="row" class="text-center">{{ rank }}</th>
                                         <td>{{ user.name }}</td>
                                         <td class="text-center">
-                                            {% if request.args.get('filter') == 'weekly' %}
+                                            {% if request.args.get('filter') == 'daily' %}
+                                                {{ user.daily_points }}
+                                            {% elif request.args.get('filter') == 'weekly' %}
                                                 {{ user.weekly_points }}
                                             {% elif request.args.get('filter') == 'monthly' %}
                                                 {{ user.monthly_points }}

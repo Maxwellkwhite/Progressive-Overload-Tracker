@@ -100,8 +100,10 @@ class User(UserMixin, db.Model):
     points: Mapped[int] = mapped_column(Integer)
     weekly_points: Mapped[int] = mapped_column(Integer)
     monthly_points: Mapped[int] = mapped_column(Integer)
+    daily_points: Mapped[int] = mapped_column(Integer)
     last_weekly_reset: Mapped[Date] = mapped_column(Date)
     last_monthly_reset: Mapped[Date] = mapped_column(Date)
+    last_daily_reset: Mapped[Date] = mapped_column(Date)
 
 class SetList(db.Model):
     __tablename__ = "set_lists"
@@ -140,6 +142,11 @@ def workouts():
         if current_date.month != current_user.last_monthly_reset.month or current_date.year != current_user.last_monthly_reset.year:
             current_user.monthly_points = 0
             current_user.last_monthly_reset = current_date
+        
+        # Reset daily points if a day has passed
+        if current_date > current_user.last_daily_reset:
+            current_user.daily_points = 0
+            current_user.last_daily_reset = current_date
         
         db.session.commit()
     
@@ -213,6 +220,7 @@ def weight_update(id):
                 current_user.points += 1
                 current_user.weekly_points += 1
                 current_user.monthly_points += 1
+                current_user.daily_points += 1
             completed_update.weight = new_weight
             db.session.commit()
         return redirect(url_for('workouts'))
@@ -228,6 +236,7 @@ def reps_update(id):
                 current_user.points += 1
                 current_user.weekly_points += 1
                 current_user.monthly_points += 1
+                current_user.daily_points += 1
             completed_update.reps = new_reps
             db.session.commit()
         return redirect(url_for('workouts'))
@@ -289,6 +298,7 @@ def leaderboard():
             'points': user.points,
             'weekly_points': user.weekly_points,
             'monthly_points': user.monthly_points,
+            'daily_points': user.daily_points,
             'total_exercises': total_exercises,
             'best_lift': best_lift_info
         })
@@ -347,9 +357,10 @@ def register():
             points = 0,
             weekly_points = 0,
             monthly_points = 0,
+            daily_points = 0,
             last_weekly_reset = datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday() + 1),
             last_monthly_reset = datetime.date.today().replace(day=1),
-        )
+            last_daily_reset = datetime.date.today(),)
         db.session.add(new_user)
         db.session.commit()
         # This line will authenticate the user with Flask-Login
