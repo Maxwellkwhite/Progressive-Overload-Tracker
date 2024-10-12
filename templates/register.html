@@ -15,6 +15,12 @@
         }
     </style>
 </head>
+{% if current_user.is_authenticated %}
+    <script>
+        window.location.href = "{{ url_for('user_page') }}";
+    </script>
+{% endif %}
+
 <body class="bg-dark text-light">
     <div class="container py-5">
         <div class="row justify-content-center align-items-center">
