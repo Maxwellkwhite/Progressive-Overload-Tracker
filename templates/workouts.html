@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Workout Tracker</title>
 </head>
 <body>
     {% if current_user.is_authenticated and current_user.premium_level == 1 %}
@@ -82,6 +82,31 @@
                 <div>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newSetModal">New Set</button>
                 </div>
+
+            <!-- Instructions Modal -->
+            <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="instructionsModalLabel">Instructions</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Here are some instructions on how to use this page:</p>
+                            <ul>
+                                <li>Use the "Set" dropdown to filter exercises by set.</li>
+                                <li>Click "New Set" to create a new set of exercises.</li>
+                                <li>Use "Add Exercise" to add a new exercise to the current set.</li>
+                                <li>Update weight and reps for each exercise as you progress.</li>
+                                <li>Click "Delete" to remove an exercise from your workout.</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 

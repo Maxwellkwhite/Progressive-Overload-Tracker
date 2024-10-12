@@ -20,7 +20,7 @@ import datetime
 
 
 
-APP_NAME = 'ENTER HERE'
+APP_NAME = 'ProgressiveLift'
 stripe.api_key = 'sk_test_51Q87D2HTbTE26Y4DnNhAhLc9FFIFBJ7HSnpx0HSKMU7EFYVC5ol3cO7epzH1yK830s3i1qRBSZmPHXHgXebNZTIh00eDWJ2anN'
 
 app = Flask(__name__)
@@ -123,33 +123,34 @@ def landing_page():
     return render_template("index.html")
 
 @app.route('/workouts', methods=["GET", "POST"])
+@login_required
 def workouts():
     form = AddExercise()
-    form2=CreateSet()
+    form2 = CreateSet()
     # Get the current date
     current_date = datetime.date.today()
-    # Check if the user is logged in and their premium status
-    if current_user.is_authenticated:
-        if current_user.end_date_premium < current_date:
-            current_user.premium_level = 0
-        
-        # Reset weekly points if a week has passed
-        if (current_date - current_user.last_weekly_reset).days >= 7:
-            current_user.weekly_points = 0
-            current_user.last_weekly_reset = current_date
-        
-        # Reset monthly points if a month has passed
-        if current_date.month != current_user.last_monthly_reset.month or current_date.year != current_user.last_monthly_reset.year:
-            current_user.monthly_points = 0
-            current_user.last_monthly_reset = current_date
-        
-        # Reset daily points if a day has passed
-        if current_date > current_user.last_daily_reset:
-            current_user.daily_points = 0
-            current_user.last_daily_reset = current_date
-        
-        db.session.commit()
     
+    # Check if the user is logged in and their premium status
+    if current_user.end_date_premium < current_date:
+        current_user.premium_level = 0
+    
+    # Reset weekly points if a week has passed
+    if (current_date - current_user.last_weekly_reset).days >= 7:
+        current_user.weekly_points = 0
+        current_user.last_weekly_reset = current_date
+    
+    # Reset monthly points if a month has passed
+    if current_date.month != current_user.last_monthly_reset.month or current_date.year != current_user.last_monthly_reset.year:
+        current_user.monthly_points = 0
+        current_user.last_monthly_reset = current_date
+    
+    # Reset daily points if a day has passed
+    if current_date > current_user.last_daily_reset:
+        current_user.daily_points = 0
+        current_user.last_daily_reset = current_date
+    
+    db.session.commit()
+
     result = db.session.execute(db.select(SetList).where(SetList.user_id == current_user.id))
     user_result = db.session.execute(db.select(User).where(User.id == current_user.id))
     user = user_result.scalar()
