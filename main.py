@@ -398,7 +398,7 @@ def logout():
 #for test of Stripe
 YOUR_DOMAIN = 'http://127.0.0.1:5002'
 #for live of Stripe
-DOMAIN2 = 'https://bingebuddy.us'
+DOMAIN2 = 'https://progressivelift.com'
 
 @app.route('/price_page', methods=["GET", "POST"])
 def price_page():
@@ -430,8 +430,8 @@ def create_checkout_session():
             }],
             mode='payment',
             allow_promotion_codes=True,
-            success_url=YOUR_DOMAIN + f'/success?plan={plan}',
-            cancel_url=YOUR_DOMAIN + '/cancel',
+            success_url=DOMAIN2 + f'/success?plan={plan}',
+            cancel_url=DOMAIN2 + '/cancel',
         )
     except Exception as e:
         return str(e)
