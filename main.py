@@ -122,8 +122,10 @@ def landing_page():
     return render_template("index.html")
 
 @app.route('/workouts', methods=["GET", "POST"])
-@login_required
 def workouts():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
     form = AddExercise()
     form2 = CreateSet()
     # Get the current date
