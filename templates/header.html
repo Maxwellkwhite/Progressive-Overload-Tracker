@@ -49,6 +49,9 @@
           <a class="nav-link text-white" href="{{url_for('user_page', user_id=current_user.id) }}">Profile</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-white" href="{{url_for('feedback') }}">Feedback</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-white" href="{{url_for('logout')}}">Logout</a>
         </li>
         {% else %}
@@ -66,6 +69,9 @@
         {% endif %}
         <li class="nav-item">
           <a class="nav-link text-white" aria-current="page" href="{{url_for('leaderboard', page=1)}}">Leaderboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{{url_for('feedback') }}">Feedback</a>
         </li>
         {% endif %}
       </ul>
