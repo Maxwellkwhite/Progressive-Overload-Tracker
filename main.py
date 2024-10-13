@@ -317,6 +317,9 @@ def leaderboard():
 @app.route('/user', methods =['POST','GET'])
 @login_required
 def user_page():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
     user = current_user
     # Get user's exercises
     exercises = db.session.execute(db.select(SetList).where(SetList.user_id == user.id)).scalars().all()
