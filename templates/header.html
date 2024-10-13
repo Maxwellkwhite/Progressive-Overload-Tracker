@@ -26,9 +26,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary {% if request.path == '/' %}fixed-top{% endif %}">
   <div class="container-fluid">
-    <a class="navbar-brand" href="">
-        <img src="static/css/images/cover.png" alt="ProgressiveLift Logo" height="50", width="140">
-    </a>
+    <a class="navbar-brand">ProgressiveLift</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       {% if current_user.is_authenticated: %}
       <span class="text-white">Profile</span> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
