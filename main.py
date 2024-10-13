@@ -110,7 +110,7 @@ class SetList(db.Model):
     # Create Foreign Key, "users.id" the users refers to the tablename of User.
     user_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     set_name: Mapped[str] = mapped_column(String(250), unique=False, nullable=False)
-    exercise: Mapped[str] = mapped_column(Integer, nullable=True)
+    exercise: Mapped[str] = mapped_column(String(250), nullable=True)
     weight: Mapped[str] = mapped_column(String(250))
     reps: Mapped[str] = mapped_column(String(250))
 
