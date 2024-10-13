@@ -408,6 +408,14 @@ def price_page():
 def create_checkout_session():
     plan = request.args.get('plan')
     try:
+        stripe.Coupon.create(
+        id="free-test",
+        percent_off=100,
+        )
+        stripe.PromotionCode.create(
+        coupon="free-test",
+        code="FREETEST",
+        )
         if plan == 'year':
             price = 1999  # $19.99
             product_name = 'Yearly Access'
