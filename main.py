@@ -21,13 +21,13 @@ import datetime
 
 
 APP_NAME = 'ProgressiveLift'
-stripe.api_key = 'sk_test_51Q87D2HTbTE26Y4DnNhAhLc9FFIFBJ7HSnpx0HSKMU7EFYVC5ol3cO7epzH1yK830s3i1qRBSZmPHXHgXebNZTIh00eDWJ2anN'
+stripe.api_key = os.environ.get('STRIPE_API')
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
 Bootstrap5(app)
-# app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
-app.config['SECRET_KEY'] = 'ABSCDE'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+# app.config['SECRET_KEY'] = 'CAFJDLAFJOIE12QKLFJfjoadf'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
