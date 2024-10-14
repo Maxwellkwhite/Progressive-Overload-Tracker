@@ -80,7 +80,7 @@
                     {% endfor %}
                 </select>
                 <div>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newSetModal">New Set</button>
+                    <a href="{{ url_for('create_set') }}" class="btn btn-primary">New Set</a>
                 </div>
 
             <!-- Instructions Modal -->
@@ -187,48 +187,6 @@
             </div>
         </div>
 
-        <!-- Modal for New Set -->
-        <div class="modal fade" id="newSetModal" tabindex="-1" aria-labelledby="newSetModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-dark" id="newSetModalLabel">Create New Set</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-dark">
-                        <form action="{{ url_for('create_set') }}" method="POST" id="newSetForm">
-                            {{ form2.hidden_tag() }}
-                            <div class="mb-3">
-                                {{ form2.name_of_set.label(class="form-label text-dark") }}
-                                {{ form2.name_of_set(class="form-control text-dark") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form2.exercise1.label(class="form-label text-dark") }}
-                                {{ form2.exercise1(class="form-control text-dark") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form2.exercise2.label(class="form-label text-dark") }}
-                                {{ form2.exercise2(class="form-control text-dark") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form2.exercise3.label(class="form-label text-dark") }}
-                                {{ form2.exercise3(class="form-control text-dark") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form2.exercise4.label(class="form-label text-dark") }}
-                                {{ form2.exercise4(class="form-control text-dark") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form2.exercise5.label(class="form-label text-dark") }}
-                                {{ form2.exercise5(class="form-control text-dark") }}
-                            </div>
-                            {{ form2.submit(class="btn btn-primary") }}
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <script>
             function filterExercises() {
                 const selectedSet = document.getElementById('set-filter').value;
@@ -295,10 +253,6 @@
                 .catch(error => {
                     console.error('Error:', error);
                 });
-            }
-
-            function create_set() {
-                window.location.href = "{{ url_for('create_set') }}";
             }
 
             document.addEventListener('DOMContentLoaded', function() {
