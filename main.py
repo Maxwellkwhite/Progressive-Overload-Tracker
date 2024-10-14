@@ -476,6 +476,7 @@ def change_password():
 def feedback():
     form=Feedback()
     if form.validate_on_submit():
+        email=form.email.data
         feedback = form.feedback.data
         my_email = os.environ.get('FROM_EMAIL')
         password = os.environ.get('EMAIL_PASS')
@@ -484,7 +485,7 @@ def feedback():
         connection.login(user=my_email, password=password)
         connection.sendmail(from_addr=my_email, 
                             to_addrs=os.environ.get('TO_EMAIL'), 
-                            msg=f"Subject:Feedback from {APP_NAME}!\n\nFeedback: {feedback}",
+                            msg=f"Subject:Feedback from {APP_NAME}!\n\nFeedback: {feedback} \n\nFrom: {email}",
                             )
         connection.close()
         flash('Feedback received! Thank you for taking the time to help.')
