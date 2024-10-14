@@ -180,8 +180,7 @@ def create_set():
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", "error")
-    
-    #return render_template("create_sets.html", form=form)
+    return render_template("create_sets.html", form=form)
 
 @app.route("/weight_update/<int:id>", methods =["GET", "POST"])
 def weight_update(id):
