@@ -173,11 +173,11 @@ def create_set():
                     reps="0"
                 )
                 db.session.add(new_exercise)
+        if any(exercises):  # Check if any exercise has a value
             db.session.commit()
             return redirect(url_for("workouts"))
-        # except Exception as e:
-        #     db.session.rollback()
-        #     flash(f"An error occurred: {str(e)}", "error")
+        else:
+            flash("Please add at least one exercise to the set.", "error")
     return render_template("create_sets.html", form=form)
 
 @app.route("/weight_update/<int:id>", methods =["GET", "POST"])
