@@ -160,55 +160,27 @@ def workouts():
 
 @app.route('/create-set', methods=["GET", "POST"])
 def create_set():
-    form=CreateSet()
+    form = CreateSet()
     if form.validate_on_submit():
-        if form.exercise1.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise1.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
+        exercises = [form.exercise1.data, form.exercise2.data, form.exercise3.data, form.exercise4.data, form.exercise5.data]
+        for exercise in exercises:
+            if exercise:
+                new_exercise = SetList(
+                    user_id=current_user.id,
+                    set_name=form.name_of_set.data,
+                    exercise=exercise,
+                    weight="0",
+                    reps="0"
+                )
+                db.session.add(new_exercise)
+        
+        try:
             db.session.commit()
-        if form.exercise2.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise2.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        if form.exercise3.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise3.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        if form.exercise4.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise4.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        if form.exercise5.data:
-            new_exercise = SetList(
-                user_id=current_user.id,
-                set_name=form.name_of_set.data,
-                exercise=form.exercise5.data,
-                weight=0,
-                reps=0)
-            db.session.add(new_exercise)
-            db.session.commit()
-        g_user = current_user.get_id()
-        return redirect(url_for("workouts"))
+            return redirect(url_for("workouts"))
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An error occurred: {str(e)}", "error")
+    
     return render_template("create_sets.html", form=form)
 
 @app.route("/weight_update/<int:id>", methods =["GET", "POST"])
