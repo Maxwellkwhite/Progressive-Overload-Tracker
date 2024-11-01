@@ -383,10 +383,10 @@ def create_checkout_session():
     plan = request.args.get('plan')
     try:
         if plan == 'year':
-            price = 1999  # $19.99
+            price = 299  # $2.99
             product_name = 'Yearly Access'
         elif plan == 'life':
-            price = 2999  # $29.99
+            price = 499  # $4.99
             product_name = 'Lifetime Access'
         else:
             return "Invalid plan selected", 400
